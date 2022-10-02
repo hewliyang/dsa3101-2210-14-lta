@@ -8,3 +8,4 @@ requests
 urllib
 dotenv
 geopy
+opencv-python

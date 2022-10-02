@@ -1,4 +1,4 @@
-from geopy import distance;
+from geopy import distance
 
 def avg_distance(start, end, loc):
     return (distance.distance(start, loc).km + distance.distance(end, loc).km)/2

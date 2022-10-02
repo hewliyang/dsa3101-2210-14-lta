@@ -70,10 +70,10 @@ def speed_attributes():
         speedBands.append(speed['SpeedBand'])
         minSpeeds.append(speed['MinimumSpeed'])
         maxSpeeds.append(speed['MaximumSpeed'])
-        latStart.append(speed['Location'].split(" ")[0])
-        latEnd.append(speed['Location'].split(" ")[2])
-        longStart.append(speed['Location'].split(" ")[1])
-        longEnd.append(speed['Location'].split(" ")[3])
+        latStart.append(float(speed['Location'].split(" ")[0]))
+        latEnd.append(float(speed['Location'].split(" ")[2]))
+        longStart.append(float(speed['Location'].split(" ")[1]))
+        longEnd.append(float(speed['Location'].split(" ")[3]))
     
     dataframe = pd.DataFrame({
         'LinkID': linkIDs,
@@ -125,5 +125,6 @@ def download(dataframe, folder):
 
 if __name__ == "__main__":
     download(cam_attributes(), "images")
+    cam_attributes().to_csv("data/speed.csv")
     speed_attributes().to_csv("data/speed.csv")
     traffic_attributes().to_csv("data/incidents.csv")

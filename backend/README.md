@@ -1,3 +1,12 @@
+# Backend Documentation
+
+## File Descriptions
+
+### crop.py
+
+Used to crop traffic images into their 2 distinct directions using OpenCV.  
+Outputs an array of coordinates representing the cropped polygon which can be saved.  
+
 How To Crop:
 1) Ensure the images you want to crop are in images folder
 2) go cmd and cd to this folder:
@@ -16,3 +25,8 @@ How To Crop:
 - Check to see if cropped correctly
 - Press Enter
 - If both sides cropped correctly --> Copy the coords outputed on ur cmd
+
+## Design Decisions
+
+
+## API

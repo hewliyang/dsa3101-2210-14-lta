@@ -69,5 +69,4 @@ if __name__=="__main__":
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    print("First Direction Coords:", coord)
-    print("Other Direction Coords:", coord2)
+    print([coord, coord2])

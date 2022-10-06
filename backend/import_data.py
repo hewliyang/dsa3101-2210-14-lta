@@ -125,6 +125,6 @@ def download(dataframe, folder):
 
 if __name__ == "__main__":
     download(cam_attributes(), "images")
-    cam_attributes().to_csv("data/speed.csv")
+    cam_attributes().to_csv("data/cam.csv")
     speed_attributes().to_csv("data/speed.csv")
     traffic_attributes().to_csv("data/incidents.csv")

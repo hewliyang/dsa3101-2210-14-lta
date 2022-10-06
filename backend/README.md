@@ -2,6 +2,17 @@
 
 ## File Descriptions
 
+### utils.py
+
+Contains helper functions which help pre-process and generate new features for data retrieved from
+LTA API. Also serves as to export one instance of data locally. Calling
+
+```
+python utils.py
+```
+
+Will export speed band data and traffic incidents to CSV files, while images are downloaded.
+
 ### crop.py
 
 Used to crop traffic images into their 2 distinct directions using OpenCV.  

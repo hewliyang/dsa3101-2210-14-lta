@@ -62,4 +62,6 @@ Speed band data returned by LTA's sensors are typically
 1. Heavily clustered in the south 
 2. Not relevant to the locations of their traffic cameras which are on **highways** only
 
+The interactive plot is available at this [link](https://hewliyang.github.io/)
+
 ## API

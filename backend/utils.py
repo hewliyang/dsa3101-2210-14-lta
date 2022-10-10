@@ -98,6 +98,7 @@ def retrieve_incidents():
     return df
 
 if __name__ == "__main__":
+    retrieve_images().to_csv("data/images.csv")
     retrieve_speedbands().to_csv("data/speedbands.csv")
     retrieve_incidents().to_csv("data/incidents.csv")
     download_images(retrieve_images(), "images")

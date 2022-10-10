@@ -6,3 +6,4 @@ requests
 dash
 dash_bootstrap_components
 Flask
+folium

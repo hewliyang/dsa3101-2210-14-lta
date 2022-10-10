@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+# function to crop cv2 image according to specified coordinates
 def crop(img, coord):
     mask = np.zeros(img.shape[0:2], dtype=np.uint8)
     points = np.array([coord])
@@ -12,6 +13,7 @@ def crop(img, coord):
     dst = wbg+res
     return dst
 
+# function to automatically crop image into 2 directions
 def auto_crop(img, coords):
     dir1 = crop(img, coords[0])
     if (coords[1]):
@@ -19,6 +21,7 @@ def auto_crop(img, coords):
     else:
         dir2 = 0
     return [dir1, dir2]
+
 
 # function to display the coordinates of
 # of the points clicked on the image
@@ -28,7 +31,6 @@ def click_event(event, x, y, flag, coord):
         coord.append((x,y))
  
 
- 
 # driver function
 if __name__=="__main__":
  

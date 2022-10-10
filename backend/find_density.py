@@ -9,7 +9,7 @@ from crop import auto_crop
 from count import getVehicleCount
 
 ### Read in a dictionary translation of cam.csv 
-cam_info = json.load(open("camera_info.txt"))
+cam_info = json.load(open("metadata/camera_info.txt"))
 
 # Calculate traffic density of an image (# vehicles per KM per lane)
 def density(img, cameraID, dir):

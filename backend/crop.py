@@ -19,7 +19,7 @@ def auto_crop(img, coords):
     if (coords[1]):
         dir2 = crop(img, coords[1])
     else:
-        dir2 = 0
+        dir2 = []
     return [dir1, dir2]
 
 

@@ -64,4 +64,16 @@ Speed band data returned by LTA's sensors are typically
 
 The interactive plot is available at this [link](https://hewliyang.github.io/)
 
+## Models Used
+
+**Vehicle Counting**
+
+We use a pre-trained YOLO V4 model to count the number of vehicles that can be seen from the traffic cameras.
+
+The weights are not included in this repository, but can be retrieved from [AlexeyAB's](https://github.com/AlexeyAB/darknet/wiki/YOLOv4-model-zoo) repository. This file should be included under the ```models``` folder along with its associated ```.cfg``` file. 
+
+An example of a detection can be seen in the following image :
+
+![](./assets/sample_detection.jpg)
+
 ## API

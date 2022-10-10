@@ -7,3 +7,9 @@
 env/
 venv/
 
+# Caches
+__pycache__
+
+# Local Assets
+sampleImg
+

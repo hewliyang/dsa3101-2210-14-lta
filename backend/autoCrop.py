@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import cv2
 import ast
+import urllib
 
 from utils import retrieve_images, download_images
 
@@ -17,8 +18,7 @@ def crop(img, coord):
     dst = wbg+res
     return dst
 
-def auto_crop(id, coords):
-    img = cv2.imread('temp/'+id+'.jpg', 1)
+def auto_crop(img, coords):
     dir1 = crop(img, coords[0])
     if (coords[1]):
         dir2 = crop(img, coords[1])
@@ -27,19 +27,14 @@ def auto_crop(id, coords):
     return [dir1, dir2]
 
 def crop_images(df):
-    path = os.path.abspath(os.path.join(os.getcwd(), "temp"))
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    download_images(df, path)
     cam = pd.read_csv("cam.csv")
-    
     a = []
-
     for i in range(1, len(df)+1):
-        id = df["CameraID"][i-1]
         DirCoords = ast.literal_eval(cam["DirCoords"][i])
-        a.append(auto_crop(id, DirCoords))
+        resp = urllib.request.urlopen(df["ImageLink"][i-1])
+        image = np.asarray(bytearray(resp.read()), dtype="uint8")
+        img = cv2.imdecode(image, cv2.IMREAD_UNCHANGED)
+        a.append(auto_crop(img, DirCoords))
 
     return a
 

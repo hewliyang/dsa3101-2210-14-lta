@@ -15,6 +15,11 @@ Will export speed band data and traffic incidents to CSV files, while images are
 
 ### crop.py
 
+Two distinct uses:
+1) Auto Cropping  
+- Using pre-coded coordinates, crop images into 2.
+
+2) Store cropping coordinates to be used as the coords in auto cropping  
 Used to crop traffic images into their 2 distinct directions using OpenCV.  
 Outputs an array of coordinates representing the cropped polygon which can be saved.  
 
@@ -40,6 +45,10 @@ How To Crop:
 - Check to see if cropped correctly
 - Press Enter
 - If both sides cropped correctly --> Copy the coords outputed on ur cmd
+
+
+### find_density.py  
+Takes in functions from crop, utils, count to combine and find the latest density from images taken from lta
 
 ## Design Decisions
 

@@ -18,6 +18,10 @@ Will export speed band data and traffic incidents to CSV files, while images are
 Used to crop traffic images into their 2 distinct directions using OpenCV.  
 Outputs an array of coordinates representing the cropped polygon which can be saved.  
 
+Cropped Coordinates:
+- In the case of there being only 1 direction in image: leave the second list BLANK!
+- The auto cropping code checks for a blank list: will not be enough to put 0 in distance
+
 How To Crop:
 1) Ensure the images you want to crop are in images folder
 2) go cmd and cd to this folder:

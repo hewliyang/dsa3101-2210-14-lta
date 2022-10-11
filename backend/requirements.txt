@@ -3,7 +3,7 @@ datetime
 requests
 python-dotenv
 geopy
-opencv-python
 flask
 flask-restful
 numpy
+opencv-python

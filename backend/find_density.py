@@ -38,3 +38,4 @@ def find_density(image_df, cameraID):
         density2 = 0
         
     return (density1, density2)
+

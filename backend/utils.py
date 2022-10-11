@@ -6,6 +6,7 @@ import re
 from dotenv import load_dotenv
 import os
 import urllib
+from find_density import find_density
 
 env_loc = os.path.abspath(os.path.join(os.getcwd(), '..'))
 load_dotenv(os.path.join(env_loc, '.env'))
@@ -96,6 +97,16 @@ def retrieve_incidents():
     df["timestamp"] = df.apply(lambda x: get_datetime(x["Message"]), axis = 1)
     df["Message"] = df.apply(lambda x: get_message(x["Message"]), axis = 1)
     return df
+
+# returns a DataFrame of one row concerning the specified cameraID and its traffic density
+def retrieve_density(cameraID):
+    img_data = retrieve_images()
+    # filter for the specified camera
+    img_data = img_data[img_data['CameraID']==str(cameraID)]
+    # extract the img download link
+    d1, d2 = find_density(img_data, cameraID)
+    img_data = img_data.assign(density1=[d1], density2=[d2])
+    return img_data
 
 if __name__ == "__main__":
     retrieve_images().to_csv("data/images.csv")

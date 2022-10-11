@@ -1,11 +1,9 @@
-xlsxwriter
-os
-re
 pandas
 datetime
-json
 requests
-urllib
-dotenv
+python-dotenv
 geopy
 opencv-python
+flask
+flask-restful
+numpy

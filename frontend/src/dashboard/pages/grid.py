@@ -8,15 +8,26 @@ dash.register_page(
 	path='/grid',
 	title='Grid View'
 )
+def seriousness(probability):
+	if probability > 0.75:
+		return {"border":0, "outline":"4px solid red", "outline-offset":"-4px"}
+	elif probability > 0.5:
+		return {"border":0, "outline":"4px solid orange", "outline-offset":"-4px"}
+	else:
+		return {"border":0, "outline":"4px solid green", "outline-offset":"-4px"}
 
-def create_card(img_src):
+def create_card(img_src, severity):
 	img_src = "./assets/sampleImg/1001_1143_20220105114948_a72916.jpg"
 	return dbc.Card(
 		[
 			#html.H4("Placeholder", style={'textAlign': 'center'}),
-			dbc.CardImg(src=img_src, className = 'align-self-center'),
-			dbc.CardImgOverlay(dbc.CardBody([dbc.Button(href="http://127.0.0.1:8050/gridDetailed")]))
-		]
+			dbc.CardImg(src=img_src, className = 'align-self-center', style={"max-height":"30vh", "height":"auto"}),
+			dbc.CardImgOverlay(
+				[dbc.Button(href="http://127.0.0.1:8050/gridDetailed", 
+				style= {"opacity": 0, "height": "100%", "width": "100%", "margin":0, "padding":0, "border":0})
+				], 
+				style = {"padding":0, "margin":0})
+		], style = severity
 	)
 
 def update_images(imgSrcList, page):
@@ -35,27 +46,23 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
-					#[create_card(f'{img_a1}')]
+					[create_card("Placeholder", seriousness(0.9))],
+					width = 3
+					#[create_card(f{img_a1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.8))],
+					width = 3
 					#[create_card(f'{img_a2}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.75))],
+					width = 3
 					#[create_card(f'{img_a3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.5))],
+					width = 3
 					#[create_card(f'{img_a4}')]
 				)
 			],
@@ -66,27 +73,23 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.5))],
+					width = 3
 					#[create_card(f'{img_b1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.3))],
+					width = 3
 					#[create_card(f'{img_b2}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.2))],
+					width = 3
 					#[create_card(f'{img_b3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.2))],
+					width = 3
 					#[create_card(f'{img_b4}')]
 				)
 			],
@@ -97,27 +100,23 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.2))],
+					width = 3
 					#[create_card(f'{img_c1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
+					[create_card("Placeholder", seriousness(0.4))],
 					width = 3,
-					style={"height":'20vh'}
 					#[create_card(f'{img_c2}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.5))],
+					width = 3
 					#[create_card(f'{img_c3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder")],
-					width = 3,
-					style={"height":'20vh'}
+					[create_card("Placeholder", seriousness(0.4))],
+					width = 3
 					#[create_card(f'{img_c4}')]
 				)
 			],

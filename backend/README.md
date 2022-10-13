@@ -90,3 +90,33 @@ An example of a detection can be seen in the following image :
 ![](./assets/sample_detection.jpg)
 
 ## API
+
+Steps to run locally :
+1. Create a virtual environment of your choice; eg: 
+```virtualenv venv```
+2. Activate virtual environment & Install dependencies
+```source venv/Scripts/activate```
+```pip install -r requirements.txt```
+3. Run the Flask app
+```python app.py```
+
+The app is hosted on ```localhost``` at port ```5000``` and available endpoints are
+- ```/api/v1/cam_metadata```
+- ```/api/v1/cam_images```
+- ``` /api/v1/speed_bands```
+- ```/api/v1/traffic_incidents```
+- ```/api/v1/density```
+
+For now, only ```density``` requires you to specify a parameter (```cameraID``` ) when you make a request.
+
+Example request :
+
+```python
+import requests
+import pandas as pd
+url = "http://127.0.0.1:5000/api/v1/density"
+args = {"cameraID":1702}
+r = requests.get(url, params=args)
+output = r.json()
+df = pd.DataFrame(output)
+```

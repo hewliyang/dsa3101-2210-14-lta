@@ -23,7 +23,7 @@ def serve_layout():
     return html.Div(
         [
             #nav,
-            html.H1("NAV", style={'textAlign': 'center', 'background-color': 'white', "height":"10vh", 'margin':0, 'padding':0}), # So call nav
+            html.H1("NAV", style={'textAlign': 'center', 'background-color': 'gray', "height":"10vh", 'margin':0, 'padding':0}), # So call nav
             # sidebar
             dbc.Container([
                 dash.page_container

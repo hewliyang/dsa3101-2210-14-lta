@@ -1,15 +1,11 @@
 import dash
 from dash.dependencies import Input, Output, State
-from dash import dcc
-from dash import html
+from dash import html, callback
+import os
 import dash_bootstrap_components as dbc
 import folium
 import json
-import os
 # from components import header, nav
-
-#app = dash.Dash(__name__)
-
 dash.register_page(
 	__name__,
 	path='/map',
@@ -28,8 +24,6 @@ def get_data():
             3:{"latitude": 1.280270,"longitude": 103.861959,"density": 35, "speed": 60, "prob": 0.2},
             4:{"latitude": 1.280170,"longitude": 103.851659,"density": 35, "speed": 60, "prob": 0.6},}
     return data
-
-
 
 def make_map(data):
     m = folium.Map(location= [1.3521, 103.8198], zoom_start= 12)
@@ -68,7 +62,7 @@ map1 = html.Div(
         dbc.Row(
             [
                 html.P("The Map"),
-                html.Iframe(id = "map", srcDoc = open('folium_map.html','r').read(), width = '90%', height = '650')
+                html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '90%', height = '650')
                 
             ]
         )
@@ -90,15 +84,9 @@ layout = dbc.Container(
     ]
 )
 
-@dash.callback(
-    Output('map', 'srcDoc'), 
-    Input('dummy_input', 'children'))
-              
+@callback(Output('map', 'srcDoc'), 
+              Input('dummy_input', 'children'))         
 def refresh_map(children):
     dat = get_data()
     make_map(dat)
     return open('folium_map.html','r').read()
-    
-
-if __name__ == "__main__":
-    app.run_server(debug=True, host='0.0.0.0')

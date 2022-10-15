@@ -1,27 +1,32 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import html, dcc, callback, Input, Output
-
+from dash import html, dcc, callback
+from dash.dependencies import Input, Output
+import datetime
+import random
+import os
 
 dash.register_page(
 	__name__,
 	path='/grid',
 	title='Grid View'
 )
+
+# Color border based on probability
 def seriousness(probability):
-	if probability > 0.75:
-		return {"border":0, "outline":"4px solid red", "outline-offset":"-4px"}
-	elif probability > 0.5:
-		return {"border":0, "outline":"4px solid orange", "outline-offset":"-4px"}
+	if probability >= 0.75:
+		return {"border":0, "outline":"2px solid red", "outline-offset":"-2px"}
+	elif probability >= 0.5:
+		return {"border":0, "outline":"2px solid orange", "outline-offset":"-2px"}
 	else:
-		return {"border":0, "outline":"4px solid green", "outline-offset":"-4px"}
+		return {"border":0, "outline":"2px solid green", "outline-offset":"-2px"}
 
 def create_card(img_src, severity):
-	img_src = "./assets/sampleImg/1001_1143_20220105114948_a72916.jpg"
+	image = f'./assets/sampleImg/{img_src}'
 	return dbc.Card(
 		[
 			#html.H4("Placeholder", style={'textAlign': 'center'}),
-			dbc.CardImg(src=img_src, className = 'align-self-center', style={"max-height":"30vh", "height":"auto"}),
+			dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"25vh", "height":"auto"}),
 			dbc.CardImgOverlay(
 				[dbc.Button(href="http://127.0.0.1:8050/gridDetailed", 
 				style= {"opacity": 0, "height": "100%", "width": "100%", "margin":0, "padding":0, "border":0})
@@ -30,15 +35,8 @@ def create_card(img_src, severity):
 		], style = severity
 	)
 
-def update_images(imgSrcList, page):
-	startIndex = (page-1)*12
-	endIndex = startIndex + 12
-	imgToDisplay = [imgSrcList[imgNum] for imgNum in range(startIndex, endIndex)]
-	return imgToDisplay
-
-# TODOs: Callbacks for list of images and page number
-# img_a1, img_a2, img_a3, img_a4, img_b1, img_b2, img_b3, img_b4, img_c1, img_c2, img_c3, img_c4 = update_images(imgSrcList, page)
-# TODOs: Color borders based on traffic jam probability 
+imgSrcList = [(file, round(random.uniform(0, 1), 2)) for file in os.listdir("src/assets/sampleImg/") if file.endswith(".jpg")]
+imgSrcList.sort(key= lambda x:x[1], reverse=True)
 
 layout = html.Div(
 	[
@@ -46,24 +44,20 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.9))],
+					id='img_a1',
 					width = 3
-					#[create_card(f{img_a1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.8))],
+					id='img_a2',
 					width = 3
-					#[create_card(f'{img_a2}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.75))],
+					id='img_a3',
 					width = 3
-					#[create_card(f'{img_a3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.5))],
+					id='img_a4',
 					width = 3
-					#[create_card(f'{img_a4}')]
 				)
 			],
 			class_name = "g-0", # No gaps between images
@@ -73,24 +67,21 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.5))],
+					id='img_b1',
 					width = 3
 					#[create_card(f'{img_b1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.3))],
+					id='img_b2',
 					width = 3
-					#[create_card(f'{img_b2}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.2))],
+					id='img_b3',
 					width = 3
-					#[create_card(f'{img_b3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.2))],
+					id='img_b4',
 					width = 3
-					#[create_card(f'{img_b4}')]
 				)
 			],
 			class_name = "g-0", # No gaps between images
@@ -100,29 +91,74 @@ layout = html.Div(
 		dbc.Row(
 			[
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.2))],
+					id='img_c1',
 					width = 3
-					#[create_card(f'{img_c1}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.4))],
-					width = 3,
-					#[create_card(f'{img_c2}')]
+					id='img_c2',
+					width = 3
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.5))],
+					id='img_c3',
 					width = 3
-					#[create_card(f'{img_c3}')]
 				),
 				dbc.Col(
-					[create_card("Placeholder", seriousness(0.4))],
+					id='img_c4',
 					width = 3
-					#[create_card(f'{img_c4}')]
 				)
 			],
 			class_name = "g-0", # No gaps between images
 			justify="evenly"
-		)
+		),
+		html.Div(id="last_updated", style = {"float":"right", "padding-right":"10px", "padding-top":"10px"}),
+		html.Div([
+		html.Div("Select a page", id = "pagination-contents", style={"margin":0, "padding":0}),
+		dbc.Pagination(id="pagination", max_value=8, fully_expanded=False, first_last=True),
+		html.Div(id="time", style={"display":None})
+		], style = {"float": "left", "padding-left":"10px", "padding-top":"10px"})
 	]
 )
 
+@callback(
+	Output(component_id='last_updated', component_property='children'),
+	Input(component_id='time', component_property='children')
+)
+def last_updated(time):
+	time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S") #Mock Data
+	return f'Last Updated: {time}'
+
+@callback(
+    Output("pagination-contents", "children"),
+    [Input("pagination", "active_page")],
+)
+def change_page(page):
+    if page:
+        return f"Page selected: {page}"
+    return "Select a page"
+
+@callback(
+	[Output("img_a1", "children"), #a1
+	Output("img_a2", "children"), #a2
+	Output("img_a3", "children"), #a3
+	Output("img_a4", "children"), #a4
+	Output("img_b1", "children"), #b1
+	Output("img_b2", "children"), #b2
+	Output("img_b3", "children"), #b3
+	Output("img_b4", "children"), #b4
+	Output("img_c1", "children"), #c1
+	Output("img_c2", "children"), #c2
+	Output("img_c3", "children"), #c3
+	Output("img_c4", "children")], #c4
+	Input("pagination", "active_page")
+)
+def update_images(page):
+	if not page:
+		page = 1
+	startIndex = (page-1)*12
+	endIndex = startIndex + 12
+	if endIndex >= len(imgSrcList):
+		endIndex = len(imgSrcList) - 1
+	imgToDisplay = [create_card(imgSrcList[imgNum][0], seriousness(imgSrcList[imgNum][1])) for imgNum in range(startIndex, endIndex)]
+	while len(imgToDisplay) < 12:
+		imgToDisplay += create_card(imgSrcList[-1][0], {"display":"None"})
+	return imgToDisplay

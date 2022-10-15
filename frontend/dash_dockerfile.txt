@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1
+
+FROM python
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+COPY /src /app/
+
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT [ "python", "app.py" ]

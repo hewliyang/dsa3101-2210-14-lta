@@ -17,9 +17,9 @@ imgSrcList.sort(key= lambda x:x[1], reverse=True)
 
 # Color border based on probability
 def seriousness(probability):
-	if probability >= 0.75:
+	if probability > 0.7:
 		return {"border":0, "outline":"2px solid red", "outline-offset":"-2px"}
-	elif probability >= 0.5:
+	elif probability > 0.3:
 		return {"border":0, "outline":"2px solid orange", "outline-offset":"-2px"}
 	else:
 		return {"border":0, "outline":"2px solid green", "outline-offset":"-2px"}
@@ -33,7 +33,7 @@ def create_card(img_src, severity, main=False):
 				dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"60vh", "height":"auto"}),
 			], style = severity
 		)
-	else:
+	else: #TODO: Send click image reference to detailed, so that it will be the main figure displayed
 		return dbc.Card(
 			[
 				#html.H4("Placeholder", style={'textAlign': 'center'}),
@@ -49,7 +49,6 @@ def create_card(img_src, severity, main=False):
 layout = html.Div(
 	[
 		# First Row of Traffic Images
-		# TODOs: Enhanced the size of this row
 		dbc.Row(
 			[
 				dbc.Col(
@@ -99,7 +98,7 @@ layout = html.Div(
 @callback(
 	Output(component_id='last_updated_detailed', component_property='children'),
 	Input(component_id='time_detailed', component_property='children')
-)
+) #TODO: Change last_updated time to the time of the previous photo by extracting it from the image name
 def last_updated(time):
 	time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S") #Mock Data
 	return f'Last Updated: {time}'
@@ -111,7 +110,7 @@ def last_updated(time):
 	Output("img_b3_detailed", "children"), #a4
 	Output("img_b4_detailed", "children")],
 	Input("selected_img", "children")
-)
+) #TODO: Identify selected_img using a tag from the clicked_image
 def update_images(selected_img):
 	imgToDisplay = [create_card(imgSrcList[0][0], seriousness(imgSrcList[0][1]), True)] # Main
 	imgToDisplay += [create_card(imgSrcList[imgNum][0], seriousness(imgSrcList[imgNum][1])) for imgNum in range(1, 5)]

@@ -14,13 +14,14 @@ dash.register_page(
 
 # Color border based on probability
 def seriousness(probability):
-	if probability >= 0.75:
+	if probability > 0.7:
 		return {"border":0, "outline":"2px solid red", "outline-offset":"-2px"}
-	elif probability >= 0.5:
+	elif probability > 0.3:
 		return {"border":0, "outline":"2px solid orange", "outline-offset":"-2px"}
 	else:
 		return {"border":0, "outline":"2px solid green", "outline-offset":"-2px"}
 
+# TODO: Send click image reference to detailed, so that it will be the main figure displayed
 def create_card(img_src, severity):
 	image = f'./assets/sampleImg/{img_src}'
 	return dbc.Card(
@@ -122,7 +123,7 @@ layout = html.Div(
 @callback(
 	Output(component_id='last_updated', component_property='children'),
 	Input(component_id='time', component_property='children')
-)
+) # TODO: Change last_updated time to the time of the previous photo by extracting it from the image name
 def last_updated(time):
 	time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S") #Mock Data
 	return f'Last Updated: {time}'
@@ -159,6 +160,6 @@ def update_images(page):
 	if endIndex >= len(imgSrcList):
 		endIndex = len(imgSrcList) - 1
 	imgToDisplay = [create_card(imgSrcList[imgNum][0], seriousness(imgSrcList[imgNum][1])) for imgNum in range(startIndex, endIndex)]
-	while len(imgToDisplay) < 12:
+	while len(imgToDisplay) < 12: #TODO: Fix Page 8 where there are less than 12 images
 		imgToDisplay += create_card(imgSrcList[-1][0], {"display":"None"})
 	return imgToDisplay

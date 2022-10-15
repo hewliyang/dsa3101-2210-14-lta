@@ -7,6 +7,7 @@ import dash_bootstrap_components as dbc
 from dash import Dash, html
 from dash.dependencies import Input, Output
 from flask import Flask
+from components import sidebar
 
 # from components import button, footer, header, nav
 
@@ -24,7 +25,7 @@ def serve_layout():
         [
             #nav,
             html.H1("NAV", style={'textAlign': 'center', 'background-color': 'gray', "height":"10vh", 'margin':0, 'padding':0}), # So call nav
-            # sidebar
+            sidebar,
             dbc.Container([
                 dash.page_container
                 ],

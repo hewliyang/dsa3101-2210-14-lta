@@ -119,4 +119,14 @@ args = {"cameraID":1702}
 r = requests.get(url, params=args)
 output = r.json()
 df = pd.DataFrame(output)
+
+Please also note that the timestamp is returned in UNIX format. An example is ```1665939900000``` which translates to ```2022-10-16T17:05:00```. You may do the conversion as follows using the ```datetime``` module:
+
+```python
+from datetime import datetime
+from time import strftime
+
+ts = 1665939900000
+ts = ts/1000
+print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
 ```

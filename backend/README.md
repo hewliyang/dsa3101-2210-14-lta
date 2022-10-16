@@ -119,6 +119,7 @@ args = {"cameraID":1702}
 r = requests.get(url, params=args)
 output = r.json()
 df = pd.DataFrame(output)
+```
 
 Please also note that the timestamp is returned in UNIX format. An example is ```1665939900000``` which translates to ```2022-10-16T17:05:00```. You may do the conversion as follows using the ```datetime``` module:
 

@@ -23,11 +23,15 @@ def get_data():
             2:{"latitude": 1.292270,"longitude": 103.852959,"density": 35, "speed": 60, "prob": 0.8},
             3:{"latitude": 1.280270,"longitude": 103.861959,"density": 35, "speed": 60, "prob": 0.2},
             4:{"latitude": 1.280170,"longitude": 103.851659,"density": 35, "speed": 60, "prob": 0.6},
-            4:{"latitude": 1.3521,"longitude": 103.8198,"density": 35, "speed": 60, "prob": 0.6}}
+            5:{"latitude": 1.3521,"longitude": 103.8198,"density": 35, "speed": 60, "prob": 0.6}}
     return data
 
 def make_map(data):
-    m = folium.Map(location= [1.3521, 103.8198], zoom_start= 12)
+    m = folium.Map(location= [1.3621, 103.8198], 
+                   zoom_start= 12, 
+                   max_zoom = 12, 
+                   min_zoom =12, 
+                   zoom_control=False)
     for i in data.values():
         #change to each direction
         den = i['density']
@@ -75,7 +79,7 @@ map1 = html.Div(
     [
         dbc.Row(
             [
-                html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '100%', height = '750px')
+                html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '100%', height = '625px')
                 
             ]
         )
@@ -85,13 +89,10 @@ map1 = html.Div(
 
 layout = dbc.Container(
     [
-        #header func,
+        html.Div(id='dummy_input'),
         html.Br(),
-        #nav func,
         map1,
-        html.Br(),
-        #footer func
-        html.Div(id='dummy_input')
+        html.Br()
     ]
 )
 

@@ -30,7 +30,7 @@ def create_card(img_src, severity, main=False):
 		return dbc.Card(
 			[
 				#html.H4("Placeholder", style={'textAlign': 'center'}),
-				dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"60vh", "height":"auto"}),
+				dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"60vh", "height":"60vh"}),
 			], style = severity
 		)
 	else: #TODO: Send click image reference to detailed, so that it will be the main figure displayed

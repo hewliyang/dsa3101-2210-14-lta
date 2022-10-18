@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "momcake-bold";
+    src: url(fonts/momcake/Momcake-Bold.otf);
+}
+
+body {
+    margin: 0%;
+    overflow-x: hidden;
+    text-align: center;
+    font-family: "momcake-bold";
+    font-size: 1.5rem;
+}
+
+h1 {
+    margin: 0%;
+    overflow-x: hidden;
+    text-align: center;
+    font-family: "momcake-bold";
+    font-size: 3 rem;
+}
+

@@ -3,17 +3,19 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html, callback
 from dash import dcc, html, callback
 from dash.dependencies import Input, Output, State
+from numpy import size
 
 
 jam = "https://i.ibb.co/xhwnPXB/JAM-01.png"
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.Col(html.Img(src=jam, height="47px"), style={"align-content": "left"}),
-        dbc.Button("Sidebar", color="secondary", className="mr-1", id="btn_sidebar"),
+        dbc.Col(html.Img(src=jam, height="55px"), style={"align-content": "left"}),
+        dbc.Button("Sidebar", color="secondary", className="me-1", size = "lg", id="btn_sidebar", style = {"font-size": "20px"}),
         
     ],
     brand="JAM TRACKER",
+    brand_style= {"font-size": "40px"},
     brand_href="#",
     color="#4F6D7A",
     dark=True,
@@ -24,7 +26,7 @@ navbar = dbc.NavbarSimple(
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_SHOWN = {
     "position": "fixed",
-    "top": 62.5,
+    "top": 86,
     "right": 0,
     "bottom": 0,
     "width": "16rem",
@@ -38,7 +40,7 @@ SIDEBAR_SHOWN = {
 
 SIDEBAR_HIDDEN = {
     "position": "fixed",
-    "top": 62.5,
+    "top": 86,
     "right": "-16rem",
     "bottom": 0,
     "width": "16rem",
@@ -73,8 +75,6 @@ CONTENT_SHOWN = {
 
 sidebar = html.Div(
     [
-        html.H2("Sidebar", className="display-4"),
-        html.Hr(),
         html.P(),
         dbc.Nav(
             [

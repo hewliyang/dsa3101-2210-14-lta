@@ -79,9 +79,9 @@ map1 = html.Div(
     [
         dbc.Row(
             [
-                html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '100%', height = '625px')
+                html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '100%', height = '100%')
                 
-            ]
+            ],style={"height": "85vh"}
         )
     ]
 )

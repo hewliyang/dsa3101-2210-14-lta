@@ -12,8 +12,8 @@ from count import getVehicleCount
 cam_info = json.load(open("metadata/camera_info.txt"))
 
 # Calculate traffic density of an image (# vehicles per KM per lane)
-def density(img, cameraID, dir):
-    count = getVehicleCount(img)
+def density(img, cameraID, dir, detector):
+    count = getVehicleCount(img, detector)
     distance = cam_info["Dir1Distance"][str(cameraID)]/1000 if dir == 1 else \
         cam_info["Dir2Distance"][str(cameraID)]/1000
     lanes = cam_info["Dir1Lanes"][str(cameraID)] if dir == 1 else \
@@ -22,7 +22,7 @@ def density(img, cameraID, dir):
 
 # Performs the crop before running density()
 # # If any direction2's distance / lane are NaN, density = 0
-def find_density(image_df, cameraID):
+def find_density(image_df, cameraID, detector):
 
     DirCoords = ast.literal_eval(cam_info["DirCoords"][str(cameraID)])
     resp = urllib.request.urlopen(image_df[image_df['CameraID']==str(cameraID)].iloc[0]["ImageLink"])
@@ -30,10 +30,10 @@ def find_density(image_df, cameraID):
     img = cv2.imdecode(image, cv2.IMREAD_UNCHANGED)
     cropped_images = auto_crop(img, DirCoords)
 
-    density1 = density(cropped_images[0], cameraID, 1)
+    density1 = density(cropped_images[0], cameraID, 1, detector)
 
     if len(cropped_images[1]) != 0:
-        density2 = density(cropped_images[1], cameraID, 2)
+        density2 = density(cropped_images[1], cameraID, 2, detector)
     else:
         density2 = 0
         

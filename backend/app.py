@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 import json
 import pandas as pd
 from utils import *
+from detector import Detector
 
 app = Flask(__name__)
 api = Api(app)
@@ -42,7 +43,7 @@ class TrafficIncidents(Resource):
 class TrafficDensity(Resource):
     def get(self):
         cameraID = request.args.get('cameraID')
-        return Response(retrieve_density(cameraID).to_json(orient="records"),
+        return Response(retrieve_density(cameraID, detector).to_json(orient="records"),
             mimetype='application/json')
 
 
@@ -53,4 +54,6 @@ api.add_resource(TrafficIncidents, '/api/v1/traffic_incidents')
 api.add_resource(TrafficDensity, '/api/v1/density')
 
 if __name__ == '__main__':
+    with app.app_context():
+        detector = Detector()
     app.run(debug=True)

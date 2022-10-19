@@ -99,12 +99,12 @@ def retrieve_incidents():
     return df
 
 # returns a DataFrame of one row concerning the specified cameraID and its traffic density
-def retrieve_density(cameraID):
+def retrieve_density(cameraID, detector):
     img_data = retrieve_images()
     # filter for the specified camera
     img_data = img_data[img_data['CameraID']==str(cameraID)]
     # extract the img download link
-    d1, d2 = find_density(img_data, cameraID)
+    d1, d2 = find_density(img_data, cameraID, detector)
     img_data = img_data.assign(density1=[d1], density2=[d2])
     return img_data
 

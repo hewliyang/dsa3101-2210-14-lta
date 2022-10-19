@@ -5,8 +5,7 @@ from sahi.predict import get_sliced_prediction
 from detector import Detector
 
 # returns the number of vehicles in the image
-def getVehicleCount(img):
-    detector = Detector()
+def getVehicleCount(img, detector):
     obj_pred_list = detector.detect_vehicles(img)
     count = 0
     for obj in obj_pred_list:

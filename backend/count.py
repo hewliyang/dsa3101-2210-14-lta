@@ -1,15 +1,19 @@
 import sys
 import cv2
+from sahi.utils.cv import read_image_as_pil
+from sahi.predict import get_sliced_prediction
 from detector import Detector
-
-# Make sure to have opencv pip installed
-# python count.py path_to_img
 
 # returns the number of vehicles in the image
 def getVehicleCount(img):
     detector = Detector()
-    bbs = detector.detect_vehicles(img)
-    return len(bbs)
+    obj_pred_list = detector.detect_vehicles(img)
+    count = 0
+    for obj in obj_pred_list:
+        id = obj.category.id
+        if (id == 2 or id == 3 or id == 5 or id == 7):
+            count += 1
+    return count
 
 if __name__ == "__main__":
 
@@ -17,15 +21,15 @@ if __name__ == "__main__":
     filepath = sys.argv[1]
     img = cv2.imread(filepath)
 
-    # get bounding boxes
-    bb = detector.detect_vehicles(img)
-    count = len(bb)
+    # get predictions
+    result = get_sliced_prediction(
+        img,
+        detector.model,
+        slice_height = 512,
+        slice_width = 512,
+        overlap_height_ratio = 0.2,
+        overlap_width_ratio = 0.2
+        )
+    result.export_visuals(export_dir='.')
 
-    for box in bb:
-        x, y, w, h = box
-        cv2.rectangle(img, (x,y), (x+w, y+h), (255,0,0), 2)
 
-        cv2.putText(img, "vehicle_count: " + str(count), (50,50), cv2.FONT_HERSHEY_COMPLEX, 2, (0,255,0), 3)
-
-    cv2.imshow("test", img)
-    cv2.waitKey(0)

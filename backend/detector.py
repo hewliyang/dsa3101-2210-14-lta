@@ -1,17 +1,28 @@
-import cv2
+from mmdet.apis import init_detector, inference_detector
+from sahi.model import MmdetDetectionModel
+from sahi.predict import get_sliced_prediction, predict
+from sahi.utils.cv import read_image_as_pil
+
+CONFIG_FILE_PATH = 'models/yolox_tiny_8x8_300e_coco.py'
+MODEL_FILE_PATH = 'models/yolox_tiny_8x8_300e_coco_20211124_171234-b4047906.pth'
 
 class Detector:
 
     def __init__(self):
-        net = cv2.dnn.readNet("models/yolov4.weights", "models/yolov4.cfg")
-        self.model = cv2.dnn_DetectionModel(net)
-        self.model.setInputParams(size=(832, 832), scale=1/255)
-        self.classes_allowed = {2,3,5,6,7} # vehicles only
+        self.model = MmdetDetectionModel(
+            model_path = MODEL_FILE_PATH,
+            config_path = CONFIG_FILE_PATH,
+            confidence_threshold = 0.2,
+            device = 'cpu'
+        )
 
     def detect_vehicles(self, img):
-        vehicles_boxes = []
-        class_ids, scores, boxes = self.model.detect(img, confThreshold = 0.2, nmsThreshold=0.4)
-        for class_id, box in zip(class_ids, boxes):
-            if class_id in self.classes_allowed:
-                vehicles_boxes.append(box)
-        return vehicles_boxes
+        result = get_sliced_prediction(
+        img,
+        self.model,
+        slice_height = 512,
+        slice_width = 512,
+        overlap_height_ratio = 0.2,
+        overlap_width_ratio = 0.2
+        )
+        return result.object_prediction_list

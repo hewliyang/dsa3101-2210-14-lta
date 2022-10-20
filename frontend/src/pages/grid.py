@@ -9,19 +9,20 @@ import os
 dash.register_page(
 	__name__,
 	path='/grid',
-	title='Grid View'
+	title='Grid View',
+	description="Grid view of traffic"
 )
 
 # Color border based on probability
 def seriousness(probability):
 	if probability > 0.7:
-		return {"border":0, "outline":"2px solid red", "outline-offset":"-2px"}
+		return {"border":0, "outline":"4px solid red", "outline-offset":"-4px"}
 	elif probability > 0.3:
-		return {"border":0, "outline":"2px solid orange", "outline-offset":"-2px"}
+		return {"border":0, "outline":"4px solid orange", "outline-offset":"-4px"}
 	else:
-		return {"border":0, "outline":"2px solid green", "outline-offset":"-2px"}
+		return {"border":0, "outline":"4px solid green", "outline-offset":"-4px"}
 
-# TODO: Send click image reference to detailed, so that it will be the main figure displayed
+
 def create_card(img_src, severity):
 	image = f'./assets/sampleImg/{img_src}'
 	return dbc.Card(
@@ -29,13 +30,13 @@ def create_card(img_src, severity):
 			#html.H4("Placeholder", style={'textAlign': 'center'}),
 			dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"25vh", "height":"auto"}),
 			dbc.CardImgOverlay(
-				[dbc.Button(href="http://127.0.0.1:8050/gridDetailed", 
+				[dbc.Button(href=f"http://127.0.0.1:8050/gridDetailed?main_picture={img_src}", 
 				style= {"opacity": 0, "height": "100%", "width": "100%", "margin":0, "padding":0, "border":0})
 				], 
 				style = {"padding":0, "margin":0})
 		], style = severity
 	)
-
+random.seed(1)
 imgSrcList = [(file, round(random.uniform(0, 1), 2)) for file in os.listdir("src/assets/sampleImg/") if file.endswith(".jpg")]
 imgSrcList.sort(key= lambda x:x[1], reverse=True)
 
@@ -123,9 +124,10 @@ layout = html.Div(
 @callback(
 	Output(component_id='last_updated', component_property='children'),
 	Input(component_id='time', component_property='children')
-) # TODO: Change last_updated time to the time of the previous photo by extracting it from the image name
+) 
 def last_updated(time):
-	time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S") #Mock Data
+	pic = imgSrcList[0][0][10:22]
+	time = datetime.datetime.strptime(pic, "%Y%m%d%H%M") #Mock Data
 	return f'Last Updated: {time}'
 
 @callback(

@@ -51,7 +51,7 @@ def make_map(data):
                     </br>
                     <img src = "", alt = "camera image"/>
                     </br>
-                    <section style = "background-color:#006877; display: inline-block; padding: 30px">
+                    <section style = "background-color:#C0D6DF; display: inline-block; padding: 30px">
                     density is {den} </br>
                     probability of traffic jam is {pro}
                     </section>

@@ -97,7 +97,8 @@ Steps to run locally :
 2. Activate virtual environment & Install dependencies
 ```source venv/Scripts/activate```
 ```pip install -r requirements.txt```
-3. Run the Flask app
+3. Run ```mim install mmcv-full```
+4. Run the Flask app
 ```python app.py```
 
 The app is hosted on ```localhost``` at port ```5000``` and available endpoints are

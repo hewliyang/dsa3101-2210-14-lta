@@ -11,3 +11,4 @@ torch
 torchvision
 mmdet
 sahi
+openmim

@@ -11,7 +11,7 @@ jam = "https://i.ibb.co/xhwnPXB/JAM-01.png"
 navbar = dbc.NavbarSimple(
     children=[
         dbc.Col(html.Img(src=jam, height="55px"), style={"align-content": "left"}),
-        dbc.Button("Sidebar", color="secondary", className="me-1", size = "lg", id="btn_sidebar", style = {"font-size": "20px"}),
+        dbc.Button("Sidebar", className="me-1", size = "lg", id="btn_sidebar", style = {"font-size": "20px", "background-color": "#C0D6DF", "color" : "#4A6FA5"}),
         
     ],
     brand="JAM TRACKER",
@@ -35,7 +35,8 @@ SIDEBAR_SHOWN = {
     "overflow-x": "hidden",
     "transition": "all 0.5s",
     "padding": "0.5rem 1rem",
-    "background-color": "#f8f9fa",
+    "background-color": "#dbe9ee",
+    "color" : "#4A6FA5",
 }
 
 SIDEBAR_HIDDEN = {
@@ -49,7 +50,8 @@ SIDEBAR_HIDDEN = {
     "overflow-x": "hidden",
     "transition": "all 0.5s",
     "padding": "0rem 0rem",
-    "background-color": "#f8f9fa",
+    "background-color": "#dbe9ee",
+    "color" : "#4A6FA5",
 }
 
 # the styles for the main content position it to the right of the sidebar and
@@ -80,7 +82,7 @@ sidebar = html.Div(
             [
                 dbc.NavLink("Home", href="http://127.0.0.1:8050/", active="exact"),
                 dbc.NavLink("Map", href="http://127.0.0.1:8050/map", active="exact"),
-                dbc.NavLink("Grid", href="http://127.0.0.1:8050/grid", active="exact")
+                dbc.NavLink("Grid", href="http://127.0.0.1:8050/grid", active="exact"),
             ],
             vertical=True,
             pills=True,

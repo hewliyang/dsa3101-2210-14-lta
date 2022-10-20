@@ -93,7 +93,7 @@ layout = dbc.Container(
         html.Br(),
         map1,
         html.Br()
-    ]
+    ],fluid=True
 )
 
 @callback(Output('map', 'srcDoc'), 

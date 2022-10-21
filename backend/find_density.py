@@ -11,6 +11,9 @@ from count import getVehicleCount
 ### Read in a dictionary translation of cam.csv 
 cam_info = json.load(open("metadata/camera_info.txt"))
 
+noJam = {"max" : 30, "min" : 0}
+jam =  {"max" : 81.667, "min": 30}
+
 # Calculate traffic density of an image (# vehicles per KM per lane)
 def density(img, cameraID, dir):
     count = getVehicleCount(img)
@@ -39,3 +42,11 @@ def find_density(image_df, cameraID):
         
     return (density1, density2)
 
+def normaliseDensity(density):
+    if density <= noJam["max"]:
+        return 0.3 * (density - noJam["min"]) / (noJam["max"] - noJam["min"])
+    
+    else:
+        if density > jam["max"]:
+            return 1
+        return 0.7 * (density - jam["min"]) / (jam["max"] - jam["min"]) + 0.3

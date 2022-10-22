@@ -50,6 +50,8 @@ How To Crop:
 ### find_density.py  
 Takes in functions from crop, utils, count to combine and find the latest density from images taken from lta
 
+### scale.py
+Given the density data, perform data preprocessing including removing 0s and outliers. Afterwards, scale and normalise the processed data and plot the values.
 ## Design Decisions
 
 **Omitting the use of speed band data**

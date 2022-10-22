@@ -85,18 +85,11 @@ density_without_zerosAndoutliers_normalised = scale_normalise(test)
 
 """# Plots"""
 ## only uncomment when you want to see figures else it will be messy
-##hist_plot(with_outliers)
-##
-##hist_plot(normalise_all)
-##
-##hist_plot(without_outliers)
-##
-##hist_plot(normalise_without_outliers)
-##
-##hist_plot(scaled_no_zeros)
-##
-##hist_plot(scaled_normalised_no_zeros)
-##
-##hist_plot(density_without_zerosAndoutliers)
-##
-##hist_plot(density_without_zerosAndoutliers_normalised)
+#hist_plot(with_outliers)
+#hist_plot(normalise_all)
+#hist_plot(without_outliers)
+#hist_plot(normalise_without_outliers)
+#hist_plot(scaled_no_zeros)
+#hist_plot(scaled_normalised_no_zeros)
+#hist_plot(density_without_zerosAndoutliers)
+#hist_plot(density_without_zerosAndoutliers_normalised)

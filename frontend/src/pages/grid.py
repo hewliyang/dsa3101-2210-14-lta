@@ -4,6 +4,7 @@ from dash import html, dcc, callback
 from dash.dependencies import Input, Output
 import datetime
 import random
+import requests
 import os
 
 dash.register_page(
@@ -36,11 +37,19 @@ def create_card(img_src, severity):
 				style = {"padding":0, "margin":0})
 		], style = severity
 	)
+
+def get_pictures():
+	#metadata_url = "https://localhost:5000/api/v1/cam_metadata"
+	#density_url = "https://localhost:5000/api/v1/density"
+	pass
+
 random.seed(1)
 imgSrcList = [(file, round(random.uniform(0, 1), 2)) for file in os.listdir("src/assets/sampleImg/") if file.endswith(".jpg")]
 imgSrcList.sort(key= lambda x:x[1], reverse=True)
+#imgSrcList = get_pictures()
 
-layout = html.Div(
+def layout():
+	return html.Div(
 	[
 		# First Row of Traffic Images
 		dbc.Row(
@@ -112,12 +121,12 @@ layout = html.Div(
 			class_name = "g-0", # No gaps between images
 			justify="evenly"
 		),
-		html.Div(id="last_updated", style = {"float":"right", "padding-right":"10px", "padding-top":"10px"}),
+		html.Div(id="last_updated", style = {"float":"right", "padding-right":"10px", "padding-top":"5px"}),
 		html.Div([
 		html.Div("Select a page", id = "pagination-contents", style={"margin":0, "padding":0}),
 		dbc.Pagination(id="pagination", max_value=8, fully_expanded=False, first_last=True),
 		html.Div(id="time", style={"display":None})
-		], style = {"float": "left", "padding-left":"10px", "padding-top":"10px"})
+		], style = {"float": "left", "padding-left":"10px", "padding-top":"5px"})
 	]
 )
 
@@ -162,6 +171,5 @@ def update_images(page):
 	if endIndex >= len(imgSrcList):
 		endIndex = len(imgSrcList) - 1
 	imgToDisplay = [create_card(imgSrcList[imgNum][0], seriousness(imgSrcList[imgNum][1])) for imgNum in range(startIndex, endIndex)]
-	while len(imgToDisplay) < 12: #TODO: Fix Page 8 where there are less than 12 images
-		imgToDisplay += create_card(imgSrcList[-1][0], {"display":"None"})
+	imgToDisplay += [[]] * (12 - len(imgToDisplay))
 	return imgToDisplay

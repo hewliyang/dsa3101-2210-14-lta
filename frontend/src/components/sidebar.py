@@ -20,13 +20,14 @@ navbar = dbc.NavbarSimple(
     color="#4F6D7A",
     dark=True,
     fluid=True,
+    style={'max-height':'10vh'}
 )
 
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_SHOWN = {
     "position": "fixed",
-    "top": 86,
+    "top": '10vh',
     "right": 0,
     "bottom": 0,
     "width": "16rem",
@@ -41,7 +42,7 @@ SIDEBAR_SHOWN = {
 
 SIDEBAR_HIDDEN = {
     "position": "fixed",
-    "top": 86,
+    "top": '10vh',
     "right": "-16rem",
     "bottom": 0,
     "width": "16rem",

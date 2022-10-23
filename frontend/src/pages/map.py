@@ -81,7 +81,7 @@ map1 = html.Div(
             [
                 html.Iframe(id = "map", srcDoc = 'folium_map.html', width = '100%', height = '100%')
                 
-            ],style={"height": "85vh"}
+            ],style={"height": "85vh", 'padding':'2.5vh'}
         )
     ]
 )
@@ -89,11 +89,9 @@ map1 = html.Div(
 
 layout = dbc.Container(
     [
-        html.Div(id='dummy_input'),
-        html.Br(),
-        map1,
-        html.Br()
-    ],fluid=True
+        html.Div(id='dummy_input', style={'display':"None"}),
+        map1
+    ],fluid=True, style={'padding':0, 'margin':0}
 )
 
 @callback(Output('map', 'srcDoc'), 

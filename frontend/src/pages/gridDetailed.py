@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc, callback, Input, Output
 import datetime
 import random
+import requests
 import os
 
 
@@ -12,6 +13,7 @@ dash.register_page(
 	title='Grid Detailed View',
 	description="Shows the detailed description version of the chosen image"
 )
+
 random.seed(1)
 imgSrcList = [(file, round(random.uniform(0, 1), 2)) for file in os.listdir("src/assets/sampleImg/") if file.endswith(".jpg")]
 imgSrcList.sort(key= lambda x:x[1], reverse=True)
@@ -46,7 +48,24 @@ def create_card(img_src, severity, main=False):
 			], style = severity
 		)
 
+#def get_data(img_src):
+#	metadata_url = "https://localhost:5000/api/v1/cam_metadata"
+#	density_url = "https://localhost:5000/api/v1/density"
+#	info = ""
+#	pass
+#	return info
+
 def layout(main_picture=None, **other_unknown_query_strings):
+	# camera_data = get_data(main_picture)
+	{"latitude": 1.290270,"longitude": 103.851959,"density": 35, "speed": 60, "prob": 0.7}
+	camera_id = 9701
+	lag_long = (1.290270, 103.851959)
+	dir_1 = "North"
+	den_1 = 35
+	prob_1 = 0.35
+	dir_2 = "South"
+	den_2 = 48
+	prob_2 = 0.48
 	return html.Div(
 	[
 		# First Row of Traffic Images
@@ -57,9 +76,34 @@ def layout(main_picture=None, **other_unknown_query_strings):
 					width=6
 				),
 				dbc.Col(
-					[html.Div("Detailed Data on Current Image", style={
-						'textAlign': 'center', 'background-color': 'Yellow', 'max-height': '60vh', "height":"60vh"})],
-					width=6
+					[
+						dbc.Row([
+							html.H2("Camera ID", style={'textAlign':'center', 'padding':'0px', 'margin':0}),
+							html.H4(f"{camera_id}", style={'textAlign':'center', 'color':'white', 'padding':'2px', 'margin':0}),
+							html.H2(f"Location", style={'textAlign': 'center', 'padding':'0px', 'margin':0}), # , 'background-color': 'Yellow'
+							html.H4(f"{lag_long}", style={'textAlign': 'center', 'color':'white', 'padding':'2px', 'margin':0})
+						], style={'height': '20vh', 'background-color': '#4A6FA5', "padding":0, "margin":0}),
+						dbc.Row([
+							dbc.Col([
+								html.H2("DIRECTION", style={'textAlign':'center'}),
+								html.H4(f"{dir_1}", style={'textAlign':'center', 'color':'white'}),
+								html.H2("DENSITY", style={'textAlign':'center'}),
+								html.H4(f"{den_1}", style={'textAlign':'center', 'color':'white'}),
+								html.H2("PROBABILITY", style={'textAlign':'center'}),
+								html.H4(f"{prob_1}", style={'textAlign':'center', 'color':'white'})
+							], width = 6),
+							dbc.Col([
+								html.H2("DIRECTION", style={'textAlign':'center'}),
+								html.H4(f"{dir_2}", style={'textAlign':'center', 'color':'white'}),
+								html.H2("DENSITY", style={'textAlign':'center'}),
+								html.H4(f"{den_2}", style={'textAlign':'center', 'color':'white'}),
+								html.H2("PROBABILITY", style={'textAlign':'center'}),
+								html.H4(f"{prob_2}", style={'textAlign':'center', 'color':'white'})
+							], width = 6)
+						], style={'height': '40vh', 'background-color':"#166088", "padding":0, "margin":0})
+					], 
+					width=6,
+					style={'max-height': '60vh', "height":"60vh", "padding":0, "margin":0}
 				)
 			],
 			className="g-0",
@@ -90,7 +134,7 @@ def layout(main_picture=None, **other_unknown_query_strings):
 			justify="evenly",
 			style = {"padding":0, "margin":0}
 		),
-		html.Div(id="last_updated_detailed", style = {"float":"right", "padding-right":"10px", "padding-top":"10px"}),
+		html.Div(id="last_updated_detailed", style = {"float":"right", "padding-right":"10px", "padding-top":"0px"}),
 		html.Div(id="time_detailed", style={"display":"None"}),
 		html.Div([dcc.Input(value=main_picture, id="selected_img", style={"display":"None"})], style={"display":"None"})
 	]

@@ -1,0 +1,11 @@
+services:
+  flask_model:
+    build: ../backend
+    ports:
+      - "5000:5000"
+  dash_app:
+    build:
+      context: .
+      dockerfile: dash_dockerfile.txt
+    ports:
+      - "8050:8050"

@@ -1,1 +1,9 @@
-.DS_Store
+numpy
+pandas
+dash
+plotly
+requests
+dash
+dash_bootstrap_components
+Flask
+folium

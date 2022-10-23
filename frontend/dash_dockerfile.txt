@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+FROM python
+
+ENV LISTEN_PORT=8050
+EXPOSE 8050
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+COPY /src /app/src
+
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT [ "python", "src/app.py" ]

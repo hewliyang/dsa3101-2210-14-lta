@@ -97,7 +97,7 @@ layout = dbc.Container(
 )
 
 @callback(Output('map', 'srcDoc'), 
-              Input('dummy_input', 'children'))         
+        Input('dummy_input', 'children'))         
 def refresh_map(children):
     dat = get_data()
     make_map(dat)

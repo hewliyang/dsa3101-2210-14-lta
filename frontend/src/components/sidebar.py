@@ -8,19 +8,30 @@ from numpy import size
 
 jam = "https://i.ibb.co/xhwnPXB/JAM-01.png"
 
-navbar = dbc.NavbarSimple(
+navbar = dbc.Navbar(
     children=[
-        dbc.Col(html.Img(src=jam, height="55px"), style={"align-content": "left"}),
-        dbc.Button("Sidebar", className="me-1", size = "lg", id="btn_sidebar", style = {"font-size": "20px", "background-color": "#C0D6DF", "color" : "#4A6FA5"}),
-        
+        dbc.Row([
+            dbc.Col(
+                [
+                    html.Div("JAM", style={'font-size':'70px', 'display':'inline-block', "max-height":"10vh", 'padding-bot':'6px', 'line-height':1}), 
+                    html.A(html.Img(src=jam, height="70px", style={'display':'inline-block', "max-height":"10vh", 'padding-bot':'6px', 'vertical-align':'bottom'}), href="http://127.0.0.1:8050/"), 
+                    html.Div("TRACKER", style={'font-size':'70px', 'display':'inline-block', "max-height":"10vh", 'padding-bot':'6px','line-height':1})
+                ], 
+                width = 11,
+                style={"max-height":"10vh", 'padding':0}
+            ),
+            dbc.Col(
+                dbc.Button("Sidebar", className="me-1", size = "lg", id="btn_sidebar", style = {"font-size": "20px", "background-color": "#C0D6DF", "color" : "#4A6FA5", 'margin-top':"7px"}), 
+                width=1
+            ),
+        ], style={'max-height':'10vh', 'width':"100%", 'margin':0, 'padding':0}),        
     ],
-    brand="JAM TRACKER",
-    brand_style= {"font-size": "40px"},
-    brand_href="#",
+    #brand="JAM TRACKER",
+    #brand_style= {"font-size": "40px"},
+    #brand_href="#",
     color="#4F6D7A",
     dark=True,
-    fluid=True,
-    style={'max-height':'10vh'}
+    style={'height':'10vh', 'max-height':'10vh', 'margin':0, 'padding':0}
 )
 
 

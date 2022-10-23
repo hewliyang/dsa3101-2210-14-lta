@@ -46,7 +46,7 @@ def serve_layout():
                 ],
                 id="page-content",
                 fluid=True,
-                style={"height":"90vh", "transition": "margin-right .5s", "width":"auto", "padding":0, "margin":0}
+                style={"height":"90vh", "transition": "margin-right .5s", "width":"auto", "padding":0, "margin":0, 'max-height':"90vh"}
             )
         ]
     )

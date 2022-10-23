@@ -31,7 +31,7 @@ def create_card(img_src, severity):
 			#html.H4("Placeholder", style={'textAlign': 'center'}),
 			dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"25vh", "height":"auto"}),
 			dbc.CardImgOverlay(
-				[dbc.Button(href=f"http://127.0.0.1:8050/gridDetailed?main_picture={img_src}", 
+				[dbc.Button(href=f"http://localhost:8050/gridDetailed?main_picture={img_src}", 
 				style= {"opacity": 0, "height": "100%", "width": "100%", "margin":0, "padding":0, "border":0})
 				], 
 				style = {"padding":0, "margin":0})

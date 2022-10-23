@@ -6,16 +6,15 @@ from dash.dependencies import Input, Output
 dash.register_page(__name__, path = '/')
 
 layout = html.Div(children=[
-    html.P("This is an application to calculate the density and probability of traffic jam on the road."),
-    html.P("Jam Tracker consists of two pages, the map and the grid."),
+    html.P("This is an application to calculate the density and probability of traffic jam on the road.", style={'padding':0, 'margin':0}),
+    html.P("Jam Tracker consists of two pages, the map and the grid.", style={'padding':0, 'margin':0}),
     dcc.Tabs(id="tabs-about", value='model', children=[
         dcc.Tab(label='Model', value='model'),
         dcc.Tab(label='Map', value='map'),
         dcc.Tab(label='Grid', value='grid'),
     ]),
     html.Div(id='tabs-content', style={'max-height':'80vh'}),
-    html.Br(),
-    html.Footer('the application will be refreshed after predictions for all cameras have been made.')
+    html.Footer('the application will be refreshed after predictions for all cameras have been made.', style={'padding':'2px 2px'})
 ], style={'max-height':'90vh'})
 
 @callback(Output('tabs-content', 'children'),
@@ -60,7 +59,18 @@ def render_content(tab):
                     ),
                     dbc.Col(
                         [
-                            html.Img(src= '../assets/about_map_detailed.png', style={'height':'100%', 'width':'100%','max-height':'80vh', 'padding':'10px'})
+                            dbc.Carousel(
+                                items=[
+                                    {"key": "1", "src": '../assets/about_map.png', "caption":"Overview"},
+                                    {"key": "2", "src": '../assets/about_map_detailed.png', "caption":"Detailed"},
+                                ],
+                                ride = "carousel",
+                                interval = 2000,
+                                indicators=True,
+                                variant = 'dark',
+                                className="carousel-fade",
+                                style={'height':'100%', 'width':'100%','max-height':'75vh', 'padding':'10px'}
+                            )
                         ], width = 6
                     )
                 ])
@@ -85,7 +95,17 @@ def render_content(tab):
                     ),
                     dbc.Col(
                         [
-                            html.Img(src= '../assets/about_grid_detailed.png', style={'height':'100%', 'width':'100%','max-height':'80vh', 'padding':'10px'})
+                            dbc.Carousel(
+                                items=[
+                                    {"key": "1", "src": '../assets/about_grid.png', "caption":"Overview"},
+                                    {"key": "2", "src": '../assets/about_grid_detailed.png', "caption":"Detailed"},
+                                ],
+                                ride = "carousel",
+                                interval = 2000,
+                                indicators=True,
+                                className="carousel-fade",
+                                style={'height':'100%', 'width':'100%','max-height':'80vh', 'padding':'10px'}
+                            )    
                         ], width = 6
                     )
                 ])

@@ -1,5 +1,62 @@
 # Backend Documentation
 
+## API 
+
+**Follow the steps to run the API on your local computer**
+
+1. Docker
+
+Make sure the ```.env``` file is in this directory. Then simply run  
+
+```docker build -t . api```  
+```docker run -d -p 5000:5000 api```
+
+2. Virtual Environment
+
+- Create a virtual environment of your choice; eg: 
+```virtualenv venv```
+- Activate virtual environment & Install dependencies
+```source venv/Scripts/activate```
+```pip install -r requirements.txt```
+- Run ```mim install mmcv-full```
+- Run the Flask app
+```python app.py```
+
+The app is hosted on ```localhost``` at port ```5000``` and available endpoints are
+- ```/api/v1/cam_metadata```
+- ```/api/v1/cam_images```
+- ``` /api/v1/speed_bands```
+- ```/api/v1/traffic_incidents```
+- ```/api/v1/density```
+- ```/api/v1/batch_inference```
+
+Only ```density``` requires you to specify a parameter (```cameraID```, ```prob```) when you make a request.
+
+Specific usage examples can be found in the [api_demo notebook](https://github.com/hewliyang/dsa3101-2210-14-lta/blob/main/backend/api_demo.ipynb)
+
+Example request :
+
+```python
+import requests
+import pandas as pd
+url = "http://127.0.0.1:5000/api/v1/density"
+args = {"cameraID":1702}
+r = requests.get(url, params=args)
+output = r.json()
+df = pd.DataFrame(output)
+```
+
+Please also note that the timestamp is returned in UNIX format. An example is ```1665939900000``` which translates to ```2022-10-16T17:05:00```. You may do the conversion as follows using the ```datetime``` module:
+
+```python
+from datetime import datetime
+from time import strftime
+
+ts = 1665939900000
+ts = ts/1000
+print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
+```
+
 ## File Descriptions
 
 ### utils.py
@@ -91,47 +148,3 @@ The weights are not included in this repository, but can be retrieved from [Alex
 An example of a detection can be seen in the following image :
 
 ![](./assets/sample_detection.jpg)
-
-## API
-
-Steps to run locally :
-1. Create a virtual environment of your choice; eg: 
-```virtualenv venv```
-2. Activate virtual environment & Install dependencies
-```source venv/Scripts/activate```
-```pip install -r requirements.txt```
-3. Run ```mim install mmcv-full```
-4. Run the Flask app
-```python app.py```
-
-The app is hosted on ```localhost``` at port ```5000``` and available endpoints are
-- ```/api/v1/cam_metadata```
-- ```/api/v1/cam_images```
-- ``` /api/v1/speed_bands```
-- ```/api/v1/traffic_incidents```
-- ```/api/v1/density```
-
-For now, only ```density``` requires you to specify a parameter (```cameraID``` ) when you make a request.
-
-Example request :
-
-```python
-import requests
-import pandas as pd
-url = "http://127.0.0.1:5000/api/v1/density"
-args = {"cameraID":1702}
-r = requests.get(url, params=args)
-output = r.json()
-df = pd.DataFrame(output)
-```
-
-Please also note that the timestamp is returned in UNIX format. An example is ```1665939900000``` which translates to ```2022-10-16T17:05:00```. You may do the conversion as follows using the ```datetime``` module:
-
-```python
-from datetime import datetime
-from time import strftime
-
-ts = 1665939900000
-ts = ts/1000
-print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
-```

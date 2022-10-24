@@ -6,7 +6,7 @@ import re
 from dotenv import load_dotenv
 import os
 import urllib
-from find_density import find_density
+from find_density import find_density, normaliseDensity, find_density_with_link
 
 env_loc = os.path.abspath(os.path.join(os.getcwd(), '..'))
 load_dotenv(os.path.join(env_loc, '.env'))
@@ -107,6 +107,35 @@ def retrieve_density(cameraID, detector):
     d1, d2 = find_density(img_data, cameraID, detector)
     img_data = img_data.assign(density1=[d1], density2=[d2])
     return img_data
+
+def retrieve_density_normalised(cameraID, detector):
+    img_data = retrieve_images()
+    # filter for the specified camera
+    img_data = img_data[img_data['CameraID']==str(cameraID)]
+    # extract the img download link
+    d1, d2 = find_density(img_data, cameraID, detector)
+    img_data = img_data.assign(density1=[normaliseDensity(d1)], density2=[normaliseDensity(d2)])
+    return img_data
+
+# add batch predict function for density
+def batch_retrieve_dense_prob(detector):
+    img_data = retrieve_images()
+    
+    dense_arr1 = []
+    dense_arr2 = []
+    prob_arr1 = []
+    prob_arr2 = []
+
+    for camID, img_link in zip(img_data.CameraID, img_data.ImageLink):
+        d1, d2 = find_density_with_link(img_link, camID, detector)
+        dense_arr1.append(d1)
+        dense_arr2.append(d2)
+        prob_arr1.append(normaliseDensity(d1))
+        prob_arr2.append(normaliseDensity(d2))
+    
+    img_data = img_data.assign(density1=dense_arr1, density2=dense_arr2, prob1=prob_arr1, prob2=prob_arr2)
+    return img_data
+
 
 if __name__ == "__main__":
     retrieve_images().to_csv("data/images.csv")

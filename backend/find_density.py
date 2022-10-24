@@ -48,6 +48,24 @@ def find_density(image_df, cameraID, detector):
         
     return (density1, density2)
 
+# variation of above function that takes in just a img_link instead of the dataframe
+def find_density_with_link(img_link, cameraID, detector):
+
+    DirCoords = ast.literal_eval(cam_info["DirCoords"][str(cameraID)])
+    resp = urllib.request.urlopen(img_link)
+    image = np.asarray(bytearray(resp.read()), dtype="uint8")
+    img = cv2.imdecode(image, cv2.IMREAD_UNCHANGED)
+    cropped_images = auto_crop(img, DirCoords)
+
+    density1 = density(cropped_images[0], cameraID, 1, detector)
+
+    if len(cropped_images[1]) != 0:
+        density2 = density(cropped_images[1], cameraID, 2, detector)
+    else:
+        density2 = 0
+        
+    return (density1, density2)
+
 def normaliseDensity(density):
     if density <= noJam["max"]:
         return 0.3 * (density - noJam["min"]) / (noJam["max"] - noJam["min"])

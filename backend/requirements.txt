@@ -12,3 +12,4 @@ torchvision
 mmdet
 sahi
 openmim
+scikit-learn

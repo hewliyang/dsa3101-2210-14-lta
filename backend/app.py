@@ -7,6 +7,9 @@ from detector import Detector
 
 app = Flask(__name__)
 api = Api(app)
+# initialise inference model
+global detector
+detector = Detector()
 
 # returns camera metadata for each cameraID
 # consists of {Latitude, Longitude,Dir1Distance, Dir2Distance, Dir1Lanes, Dir2Lanes, DirCoords}
@@ -38,22 +41,29 @@ class TrafficIncidents(Resource):
 
 # returns the traffic density for 2 directions for a given CameraID at time of request
 # Typically, dir1 = North and dir2 = South
-# this functions performs alot of image pre-processing and running a YOLOv4 model, so expect some time lag
+# this functions performs alot of image pre-processing and running a YOLOX-tiny model with SAHI slicing, so expect some time lag
 # schema : {CameraID, Latitude, Longitude, ImageLink, timestamp, density1, density2}
 class TrafficDensity(Resource):
     def get(self):
         cameraID = request.args.get('cameraID')
+        prob = request.args.get('prob')
+        if prob:
+            return Response(retrieve_density_normalised(cameraID, detector).to_json(orient="records"),
+            mimetype='application/json')
         return Response(retrieve_density(cameraID, detector).to_json(orient="records"),
             mimetype='application/json')
 
+class BatchInference(Resource):
+    def get(self):
+        return Response(batch_retrieve_dense_prob(detector).to_json(orient="records"),
+            mimetype='application/json')
 
 api.add_resource(CameraMetadata, '/api/v1/cam_metadata')
 api.add_resource(CameraImages, '/api/v1/cam_images')
 api.add_resource(SpeedBands, '/api/v1/speed_bands')
 api.add_resource(TrafficIncidents, '/api/v1/traffic_incidents')
 api.add_resource(TrafficDensity, '/api/v1/density')
+api.add_resource(BatchInference, '/api/v1/batch_inference')
 
 if __name__ == '__main__':
-    with app.app_context():
-        detector = Detector()
     app.run(debug=True)

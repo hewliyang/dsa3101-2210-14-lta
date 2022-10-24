@@ -8,7 +8,7 @@
 
 Make sure the ```.env``` file is in this directory. Then simply run  
 
-```docker build -t . api```  
+```docker build -t api .```  
 ```docker run -d -p 5000:5000 api```
 
 2. Virtual Environment

@@ -8,8 +8,7 @@ import os
 import urllib
 from find_density import find_density, normaliseDensity, find_density_with_link
 
-env_loc = os.path.abspath(os.path.join(os.getcwd(), '..'))
-load_dotenv(os.path.join(env_loc, '.env'))
+load_dotenv()
 
 API_KEY = os.getenv('PROJECT_API_KEY')
 

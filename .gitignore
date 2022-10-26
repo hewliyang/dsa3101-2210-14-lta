@@ -4,3 +4,11 @@
 *.weights
 */data
 */images
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+__pycache__

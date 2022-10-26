@@ -29,7 +29,10 @@ def render_content(tab):
                             html.Div(
                                 children = [
                                     html.H1('Model'),
-                                    html.P('Using a model to detect....')
+                                    html.P('We used a pre-trained YOLO V4 model to count the number of vehicles that can be seen from\
+										the cameras (Refer to the blue squares in the sample picture on the right). Next we perform a\
+										calculation of the density by accounting for the number of vehicles per lane which we then use\
+										to make a prediction on the probability of traffic jam for that direction')
                                 ])
                         ], width = 6
                     ),

@@ -116,6 +116,15 @@ def retrieve_density_normalised(cameraID, detector):
     img_data = img_data.assign(density1=[normaliseDensity(d1)], density2=[normaliseDensity(d2)])
     return img_data
 
+def retrieve_density_both(cameraID, detector):
+    img_data = retrieve_images()
+    # filter for the specified camera
+    img_data = img_data[img_data['CameraID']==str(cameraID)]
+    # extract the img download link
+    d1, d2 = find_density(img_data, cameraID, detector)
+    img_data = img_data.assign(density1=[d1], density2=[d2], prob1=[normaliseDensity(d1)], prob2=[normaliseDensity(d2)])
+    return img_data
+
 # add batch predict function for density
 def batch_retrieve_dense_prob(detector):
     img_data = retrieve_images()

@@ -46,11 +46,7 @@ class TrafficIncidents(Resource):
 class TrafficDensity(Resource):
     def get(self):
         cameraID = request.args.get('cameraID')
-        prob = request.args.get('prob')
-        if prob:
-            return Response(retrieve_density_normalised(cameraID, detector).to_json(orient="records"),
-            mimetype='application/json')
-        return Response(retrieve_density(cameraID, detector).to_json(orient="records"),
+        return Response(retrieve_density_both(cameraID, detector).to_json(orient="records"),
             mimetype='application/json')
 
 class BatchInference(Resource):

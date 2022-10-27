@@ -27,7 +27,7 @@ def create_card(img_src, cameraID, severity, main=False):
 		return dbc.Card(
 			[
 				dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"60vh", "height":"60vh"}),
-				dbc.CardImgOverlay([html.H5(f"CameraID:{cameraID}", className="card-title")])
+				dbc.CardImgOverlay([html.H5(f"CAMERA_ID: {cameraID}", className="card-title", style={"color":"white", "background-color":"gray", "width":"50%", "opacity":0.7})])
 			], style = severity
 		)
 	else: 
@@ -44,16 +44,6 @@ def create_card(img_src, cameraID, severity, main=False):
 		)
 
 def layout(main_picture=None, **other_unknown_query_strings):
-	# camera_data = get_data(main_picture)
-	{"latitude": 1.290270,"longitude": 103.851959,"density": 35, "speed": 60, "prob": 0.7}
-	camera_id = 9701
-	lag_long = (1.290270, 103.851959)
-	dir_1 = "North"
-	den_1 = 35
-	prob_1 = 0.35
-	dir_2 = "South"
-	den_2 = 48
-	prob_2 = 0.48
 	return html.Div(
 	[
 		# First Row of Traffic Images
@@ -67,26 +57,26 @@ def layout(main_picture=None, **other_unknown_query_strings):
 					[
 						dbc.Row([
 							html.H2("Camera ID", style={'textAlign':'center', 'padding':'0px', 'margin':0}),
-							html.H4(f"{camera_id}", style={'textAlign':'center', 'color':'white', 'padding':'2px', 'margin':0}),
+							html.H4(id='camera-id', style={'textAlign':'center', 'color':'white', 'padding':'2px', 'margin':0}),
 							html.H2(f"Location", style={'textAlign': 'center', 'padding':'0px', 'margin':0}), # , 'background-color': 'Yellow'
-							html.H4(f"{lag_long}", style={'textAlign': 'center', 'color':'white', 'padding':'2px', 'margin':0})
+							html.H4(id='lat-long', style={'textAlign': 'center', 'color':'white', 'padding':'2px', 'margin':0})
 						], style={'height': '20vh', 'background-color': '#4A6FA5', "padding":0, "margin":0}),
 						dbc.Row([
 							dbc.Col([
 								html.H2("DIRECTION", style={'textAlign':'center'}),
-								html.H4(f"{dir_1}", style={'textAlign':'center', 'color':'white'}),
+								html.H4(id='dir1', style={'textAlign':'center', 'color':'white'}),
 								html.H2("DENSITY", style={'textAlign':'center'}),
-								html.H4(f"{den_1}", style={'textAlign':'center', 'color':'white'}),
+								html.H4(id='den1', style={'textAlign':'center', 'color':'white'}),
 								html.H2("PROBABILITY", style={'textAlign':'center'}),
-								html.H4(f"{prob_1}", style={'textAlign':'center', 'color':'white'})
+								html.H4(id='prob1', style={'textAlign':'center', 'color':'white'})
 							], width = 6),
 							dbc.Col([
 								html.H2("DIRECTION", style={'textAlign':'center'}),
-								html.H4(f"{dir_2}", style={'textAlign':'center', 'color':'white'}),
+								html.H4(id='dir2', style={'textAlign':'center', 'color':'white'}),
 								html.H2("DENSITY", style={'textAlign':'center'}),
-								html.H4(f"{den_2}", style={'textAlign':'center', 'color':'white'}),
+								html.H4(id='den2', style={'textAlign':'center', 'color':'white'}),
 								html.H2("PROBABILITY", style={'textAlign':'center'}),
-								html.H4(f"{prob_2}", style={'textAlign':'center', 'color':'white'})
+								html.H4(id='prob2', style={'textAlign':'center', 'color':'white'})
 							], width = 6)
 						], style={'height': '40vh', 'background-color':"#166088", "padding":0, "margin":0})
 					], 
@@ -135,9 +125,12 @@ def layout(main_picture=None, **other_unknown_query_strings):
 )
 # 2706_1143_20220105114554_d54810
 def last_updated(time, json_data):
-	df = pd.read_json(json_data, orient = "split")
-	timestamp = df['imageFile'][0][5:]
-	time = datetime.datetime.strptime(timestamp, "%Y%m%d%H%M%s") #Mock Data
+	if json_data is not None:
+		df = pd.read_json(json_data, orient = "split")
+	else:
+		df = pd.read_csv(r"src/assets/backup.csv")	
+	timestamp = df['imageFile'][0][5:-4]
+	time = datetime.datetime.strptime(timestamp, "%Y%m%d%H%M%S") #Mock Data
 	return f'Last Updated: {time}'
 
 @callback(
@@ -145,28 +138,44 @@ def last_updated(time, json_data):
 	Output("img_b1_detailed", "children"), #a2
 	Output("img_b2_detailed", "children"), #a3
 	Output("img_b3_detailed", "children"), #a4
-	Output("img_b4_detailed", "children")],
+	Output("img_b4_detailed", "children"),
+	Output("camera-id", "children"),
+	Output("lat-long", "children"),
+	Output("dir1", "children"),
+	Output("den1", "children"),
+	Output("prob1", "children"),
+	Output("dir2", "children"),
+	Output("den2", "children"),
+	Output("prob2", "children")
+	],
 	Input("selected_img", "value"),
 	Input(component_id='current-predictions', component_property='data')
 ) 
 def update_images(selected_img, json_data):
-	df = pd.read_json(json_data, orient = "split")
-	#imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
-	test = [x for x in os.listdir(r'src/assets/imageCurrShown/') if x.endsWith(".jpg")]
-	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(test, df['CameraID'], df['prob1'], df['prob2'])]
+	if json_data is not None:
+		df = pd.read_json(json_data, orient = "split")
+	else:
+		df = pd.read_csv(r"src/assets/backup.csv")	
+	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
 	imgSrcList.sort(key= lambda x:x[2], reverse=True)
 
 	main_value = 0
 	for i in range(len(imgSrcList)):
 		if imgSrcList[i][0] == selected_img:
 			main_value = i
+			row = df[df['CameraID'] == imgSrcList[i][1]]
+			break
 	# Main
 	imgToDisplay = [create_card(imgSrcList[main_value][0], imgSrcList[main_value][1], seriousness(imgSrcList[main_value][2]), True)]
+	detailed_data = [row['CameraID'].values[0], f'{row["Latitude"].values[0]}, {row["Longitude"].values[0]}',\
+					row['dir1'].values[0], row['density1'].values[0], row['prob1'].values[0],\
+					row['dir2'].values[0], row['density2'].values[0], row['prob2'].values[0]]
 	
 	# Top 4 aside from main
 	for imgNum in range(len(imgSrcList)):
-		if i != main_value:
+		if imgNum != main_value:
 			imgToDisplay += [create_card(imgSrcList[imgNum][0], imgSrcList[imgNum][1], seriousness(imgSrcList[imgNum][2]))]
 		if len(imgToDisplay) == 5:
 			break
+	imgToDisplay += detailed_data
 	return imgToDisplay

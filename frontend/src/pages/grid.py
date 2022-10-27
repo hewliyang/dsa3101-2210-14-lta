@@ -126,9 +126,12 @@ def layout():
 	Input(component_id='current-predictions', component_property='data')
 ) 
 def last_updated(time, json_data):
-	df = pd.read_json(json_data, orient = "split")
-	timestamp = df['imageFile'][0][5:]
-	time = datetime.datetime.strptime(timestamp, "%Y%m%d%H%M%s") #Mock Data
+	if json_data is not None:
+		df = pd.read_json(json_data, orient = "split")
+	else:
+		df = pd.read_csv(r"src/assets/backup.csv")	
+	timestamp = df['imageFile'][0][5:-4]
+	time = datetime.datetime.strptime(timestamp, "%Y%m%d%H%M%S") #Mock Data
 	return f'Last Updated: {time}'
 
 @callback(
@@ -157,10 +160,11 @@ def change_page(page):
 	Input(component_id='current-predictions', component_property='data')
 )
 def update_images(page, json_data):
-	df = pd.read_json(json_data, orient = "split")
-	#imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
-	test = [x for x in os.listdir(r'src/assets/imageCurrShown/')]
-	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(test, df['CameraID'], df['prob1'], df['prob2'])]
+	if json_data is not None:
+		df = pd.read_json(json_data, orient = "split")
+	else:
+		df = pd.read_csv(r"src/assets/backup.csv")	
+	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
 	imgSrcList.sort(key= lambda x:x[2], reverse=True)
 	if not page:
 		page = 1

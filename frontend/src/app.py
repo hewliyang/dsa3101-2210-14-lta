@@ -14,13 +14,16 @@ from datetime import datetime
 from time import strftime, sleep
 import dash
 import dash_bootstrap_components as dbc
-from dash import html, dcc, dcc
+from dash import html, dcc, dcc, DiskcacheManager
 from dash.dependencies import Input, Output
 from flask import Flask
 from components import sidebar, navbar
+import diskcache
 # from multiprocessing import Process, Barrier
 
 url = "http://127.0.0.1:5000/api/v1/" #http://localhost:5000/api/v1/
+cache = diskcache.Cache("./cache")
+background_callback_manager = DiskcacheManager(cache)
 
 #function to download images, named by the cameraID_datetime.jpy
 #def download_images(folder, barrier):
@@ -71,10 +74,10 @@ url = "http://127.0.0.1:5000/api/v1/" #http://localhost:5000/api/v1/
 def generate_new_set():
 	folder = r'src/assets/imageToBeUpdated/'
 	# Empty all images in the toBeUpdated folder
-	#if os.listdir(folder) != []:
-	#	for file in os.listdir(folder):
-	#		if file.endswith(".jpg"):
-	#			os.remove(f'{folder}{file}')
+	if os.listdir(folder) != []:
+		for file in os.listdir(folder):
+			if file.endswith(".jpg"):
+				os.remove(f'{folder}{file}')
 
 	direction_label = pd.read_csv(r"src/assets/direction_label.csv")
 	# Band_Aid solution
@@ -88,30 +91,30 @@ def generate_new_set():
 			data = r1.json()[0]
 			# Download the picture
 			picTime = datetime.utcfromtimestamp(data['timestamp']/1000).strftime('%Y%m%d%H%M%S')
-			#urllib.request.urlretrieve(
-			#		data['ImageLink'],
-			#		os.path.join(folder, f'{CID}_{picTime}.jpg')
-			#)
-			predictions += [[CID, f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
+			urllib.request.urlretrieve(
+					data['ImageLink'],
+					os.path.join(folder, f'{CID}_{picTime}.jpg')
+			)
+			predictions += [[CID, data['ImageLink'], f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
 							direction_label.iloc[i, 2], data['density2'], data['prob2']]]
-		#r1 = ""
-		#sleep(2)
-	result = pd.DataFrame(predictions, columns=['CameraID', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
-	#currDisplayFolder = r'src/assets/imageCurrShown/'
-	#if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
-	#	for file in os.listdir(currDisplayFolder):
-	#		if file.endswith(".jpg"):
-	#			os.remove(f'{currDisplayFolder}{file}')
-	#for file in os.listdir(folder): # Move files from toBeUpdated to Current showing photos
-	#	if file.endswith(".jpg"):
-	#		os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
+	result = pd.DataFrame(predictions, columns=['CameraID', 'imageLink', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
+	result.to_csv(r"src/assets/backup.csv", index=False)
+	currDisplayFolder = r'src/assets/imageCurrShown/'
+	if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
+		for file in os.listdir(currDisplayFolder):
+			if file.endswith(".jpg"):
+				os.remove(f'{currDisplayFolder}{file}')
+	for file in os.listdir(folder): # Move files from toBeUpdated to Current showing photos
+		if file.endswith(".jpg"):
+			os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
 	return result
 
 server = Flask(__name__)
 app = dash.Dash(
 	__name__,
-	#server=server,
+	server=server,
 	use_pages=True,
+	background_callback_manager=background_callback_manager,
 	meta_tags=[
 				{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.2, minimum-scale=0.5"}
 			],
@@ -132,26 +135,25 @@ def serve_layout():
 				fluid=True,
 				style={"height":"90vh", "transition": "margin-right .5s", "width":"auto", "padding":0, "margin":0, 'max-height':"90vh"}
 			),
-			dcc.Interval(id='update-predictions', interval=1000000, n_intervals=0), # Every minute check
-			dcc.Store(id='current-predictions', storage_type='session', clear_data=True)
+			dcc.Interval(id='update-predictions', interval=600000, n_intervals=0), # Every 10mins refresh
+			dcc.Store(id='current-predictions', storage_type='local', clear_data=True)
 		]
 	)
 
 app.layout = serve_layout
 
-@app.callback(Output('current-predictions', 'data'), Input('update-predictions', 'n_intervals'))
-def generate_predictions(n):
-	currDisplayFirstImage = os.listdir(r'src/assets/imageCurrShown/')[0]
-	images_url = f'{url}cam_images'
-	data = requests.get(images_url).json()[0]
-	picTime = datetime.utcfromtimestamp(data['timestamp']/1000).strftime('%Y%m%d%H%M%S')
-	new_image = f'{data["CameraID"]}_{picTime}.jpg'
-	#if currDisplayFirstImage == new_image:
-	if n != 0: # Currently used to prevent the app from keep refreshing
-		return dash.no_update	
-	else:
-		predictions_df = generate_new_set()
-		return predictions_df.to_json(date_format='iso', orient = 'split')
+@app.callback(Output('current-predictions', 'data'), Input('update-predictions', 'n_intervals'),\
+	Input('current-predictions', 'data'), background=True, prevent_initial_call = True)
+# TODO:Currently preventing initial to at least load the pages
+def generate_predictions(n, json_data):
+	if json_data is not None:
+		df = pd.read_json(json_data, orient = "split")
+		images_url = f'{url}cam_images'
+		data = requests.get(images_url).json()[0]
+		if data['ImageLink'][0] == df['imageLink'][0]: # Same ImageLink means not refreshed yet
+			return dash.no_update
+	predictions_df = generate_new_set()
+	return predictions_df.to_json(date_format='iso', orient = 'split')
 
 if __name__ == "__main__":
-	app.run_server(host="0.0.0.0", debug=True, dev_tools_hot_reload=False)
+	app.run_server(host="0.0.0.0", debug=True, dev_tools_hot_reload=False, use_reloader=False)

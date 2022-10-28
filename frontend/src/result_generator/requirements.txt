@@ -1,5 +1,3 @@
-os
 pandas
 requests
-urllib
 redis

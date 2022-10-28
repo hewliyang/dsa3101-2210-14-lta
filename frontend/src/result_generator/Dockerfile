@@ -1,11 +1,12 @@
 # syntax=docker/dockerfile:1
 
-FROM python
+FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-COPY ./src/result_generator/requirements.txt requirements.txt
-COPY ./src/result_generator/result_generator.py result_generator.py
+COPY . /app/
+
+RUN python -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-CMD ["python", "result_generator.py"]
+CMD ["python", "result_generator.py", "--host=0.0.0.0"]

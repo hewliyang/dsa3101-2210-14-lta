@@ -163,7 +163,7 @@ def update_images(page, json_data):
 	if json_data is not None:
 		df = pd.read_json(json_data, orient = "split")
 	else:
-		df = pd.read_csv(r"src/assets/backup.csv")	
+		df = pd.read_csv(r"src/assets/backup.csv")
 	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
 	imgSrcList.sort(key= lambda x:x[2], reverse=True)
 	if not page:

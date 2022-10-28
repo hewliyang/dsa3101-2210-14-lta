@@ -4,8 +4,7 @@ dash
 plotly
 requests
 dash
-dash[diskcache]
 dash_bootstrap_components
 Flask
 folium
-diskcache
+redis

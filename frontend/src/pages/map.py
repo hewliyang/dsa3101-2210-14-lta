@@ -4,9 +4,10 @@ from dash import html, callback
 import os
 import dash_bootstrap_components as dbc
 import folium
-import json
+from folium import IFrame
 import pandas as pd
-# from components import header, nav
+import base64
+
 dash.register_page(
 	__name__,
 	path='/map',
@@ -35,16 +36,8 @@ def make_map(df):
     
     list_data = list(zip(df['CameraID'],df['imageFile'],df['Latitude'],df['Longitude'],df['dir1'],df['density1'],df['prob1'],df['dir2'],df['density2'],df['prob2']))
     
-    for camID,img,lat,lon,d1,den1,pro1,d2,den2,pro2 in list_data:
-        #change to each direction
-        # camID = i['CameraID']
-        # img = i['imageFile']
-        # den1 = i['density1']
-        # den2 = i['density2']
-        # pro1 = i['prob1']
-        # pro2 = i['prob2']
-        # lat = i['latitude']
-        # lon = i['longitude']
+    for camID,img_src,lat,lon,d1,den1,pro1,d2,den2,pro2 in list_data:
+        img = rf'src/assets/imageCurrShown/{img_src}'
         
         #take higher probability
         pro = pro1
@@ -58,25 +51,28 @@ def make_map(df):
         elif pro > 0.3:
             c = "orange"
         
+        #html for popup markers
+        html = '<img src="data:image/jpeg;base64,{}", style="width:85%; height:65%; margin:0px 8px">'.format
+        encoded = base64.b64encode(open(img, 'rb').read()).decode('UTF-8')
         
-        #still need include img tag in pop_html
-        pop_html = f'''<html> 
-                    <head>The location is {lat}, {lon}</head>
+        full =  ''' <html>
+                    <head>The location is {}, {}</head>
                     </br>
-                    <img src = {img}, alt = "camera image"/>
+                    {}
                     </br>
-                    <section style = "background-color:#C0D6DF; display: inline-block; padding: 30px">
-                    upwards facing direction </br>
-                    density is {den1} </br>
-                    probability of traffic jam is {pro1:.3f}
+                    <section style = "background-color:#C0D6DF; display: inline-block; padding: 20px">
+                    direction towards {}</br>
+                    density is {} </br>
+                    probability of traffic jam is {:.3f}
                     </section>
-                    <section style = "background-color:#6bf766; display: inline-block; padding: 30px">
-                    downwards facing direction </br>
-                    density is {den2} </br>
-                    probability of traffic jam is {pro2:.3f}
+                    <section style = "background-color:#6bf766; display: inline-block; padding: 20px">
+                    direction towards {}</br>
+                    density is {} </br>
+                    probability of traffic jam is {:.3f}
                     </section>
-                    </html>'''
-        iframe = folium.IFrame(pop_html)
+                    <html/>'''.format(lat,lon,html(encoded),d1,den1,pro1,d2,den2,pro2)
+        
+        iframe = IFrame(full)
         folium.Marker([lat, lon],
             popup=folium.Popup(iframe
             , max_width=650,min_width=600),
@@ -87,9 +83,6 @@ def make_map(df):
         os.remove("folium_map.html")
 
     m.save("folium_map.html")
-    
-# dat = get_data()
-# make_map(dat)
 
 map1 = html.Div(
     [
@@ -102,18 +95,18 @@ map1 = html.Div(
     ]
 )
 
-
 layout = dbc.Container(
     [
-        html.Div(id='dummy_input', style={'display':"None"}),
         map1
     ],fluid=True, style={'padding':0, 'margin':0}
 )
 
 @callback(Output('map', 'srcDoc'), 
-        Input('dummy_input', 'children'),
         Input(component_id='current-predictions', component_property='data'))         
-def refresh_map(children,json_data):
-    df = pd.read_json(json_data, orient = "split")
+def refresh_map(json_data):
+    if json_data is not None:
+        df = pd.read_json(json_data, orient = "split")
+    else:
+        df = pd.read_csv(r"src/assets/backup.csv")
     make_map(df)
     return open('folium_map.html','r').read()

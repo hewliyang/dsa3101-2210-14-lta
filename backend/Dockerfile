@@ -13,7 +13,5 @@ RUN mim install mmcv-full
 # copy all scripts
 COPY . /app
 
-ENV FLASK_APP app
-ENTRYPOINT ["python3", "-u", "-m", "flask", "run", "--host=0.0.0.0"]
-
+ENTRYPOINT ["uvicorn", "main:app", "--port 5000", "--host 0.0.0.0"]
 

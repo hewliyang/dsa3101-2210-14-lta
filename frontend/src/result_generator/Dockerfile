@@ -9,4 +9,4 @@ COPY . /app/
 RUN python -m pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-CMD ["python", "result_generator.py", "--host=0.0.0.0"]
+CMD ["python", "result_generator.py"]

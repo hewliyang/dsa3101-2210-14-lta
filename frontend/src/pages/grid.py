@@ -3,7 +3,6 @@ import dash_bootstrap_components as dbc
 from dash import html, callback
 from dash.dependencies import Input, Output
 import datetime
-import os
 import pandas as pd
 
 dash.register_page(

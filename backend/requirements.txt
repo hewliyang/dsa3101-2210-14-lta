@@ -8,9 +8,11 @@ fastapi
 uvicorn
 numpy
 opencv-python
-torch
-torchvision
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==1.12.1+cpu
+torchvision==0.13.1+cpu
 mmdet
-sahi
+sahi == 0.10.7
 openmim
 scikit-learn
+jinja2

@@ -1,12 +1,21 @@
+networks:
+  a_net:
+    driver: bridge
+
 services:
   flask-model:
     container_name: backend_flask_model
+    networks:
+      - a_net
     image: backend_flask_model
     build: ../backend
     ports:
       - "5000:5000"
+      
   dash-app:
     container_name: frontend_dash_app
+    networks:
+      - a_net
     image: frontend_dash_app
     volumes:
       - imageCurrShown:/app/src/assets/imageCurrShown
@@ -15,8 +24,10 @@ services:
       dockerfile: dash_dockerfile.txt
     ports:
       - "8050:8050"
-  result-gen:
+  result-gen:  
     container_name: frontend_result_gen
+    networks:
+      - a_net
     image: frontend_result_gen
     volumes:
       - imageCurrShown:/app/assets/imageCurrShown
@@ -25,8 +36,10 @@ services:
     depends_on:
       - "redis-cache"
       - "flask-model"
-  redis-cache:
+  redis-cache: 
     container_name: frontend_redis_cache
+    networks:
+      - a_net
     image: redis
     ports:
       - "6379:6379"

@@ -7,7 +7,7 @@ import pickle
 from datetime import datetime
 from time import strptime, sleep
 
-url = "http://localhost:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
+url = "http://backend_flask_model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
 
 # Insufficient computing resources version
 # Generate next predictions
@@ -18,7 +18,6 @@ def generate_new_set():
 		for file in os.listdir(folder):
 			if file.endswith(".jpg"):
 				os.remove(f'{folder}{file}')
-
 	direction_label = pd.read_csv(r"./assets/direction_label.csv")
 	# Band_Aid solution
 	density_url = f"{url}density"
@@ -38,7 +37,7 @@ def generate_new_set():
 			predictions += [[CID, data['ImageLink'], f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
 							direction_label.iloc[i, 2], data['density2'], data['prob2']]]
 	result = pd.DataFrame(predictions, columns=['CameraID', 'imageLink', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
-	result.to_csv(r"./assets/backup.csv", index=False)
+	#result.to_csv(r"./assets/backup.csv", index=False)
 	currDisplayFolder = r'./assets/imageCurrShown/'
 	if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
 		for file in os.listdir(currDisplayFolder):

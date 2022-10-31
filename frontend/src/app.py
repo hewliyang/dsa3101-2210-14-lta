@@ -51,4 +51,4 @@ def generate_predictions(n):
 	return predictions_df.to_json(date_format='iso', orient = 'split')
 
 if __name__ == "__main__":
-	app.run_server(host="0.0.0.0", debug=True, dev_tools_hot_reload=False, use_reloader=False)
+	app.run_server(debug=True, dev_tools_hot_reload=False, use_reloader=False)

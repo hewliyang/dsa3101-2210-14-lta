@@ -3,8 +3,9 @@ datetime
 requests
 python-dotenv
 geopy
-flask
-flask-restful
+orjson
+fastapi
+uvicorn
 numpy
 opencv-python
 torch

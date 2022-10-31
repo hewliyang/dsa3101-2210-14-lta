@@ -1,17 +1,19 @@
 # Backend Documentation
 
+**Demo : [http://13.212.85.6:5000/docs](http://13.212.85.6:5000/docs)**
+
 ## API 
 
 **Follow the steps to run the API on your local computer**
 
-1. Docker
+1. **Docker**
 
 Make sure the ```.env``` file is in this directory. Then simply run  
 
 ```docker build -t api .```  
 ```docker run -d -p 5000:5000 api```
 
-2. Virtual Environment
+2. **Virtual Environment (venv, virtualenv, conda)**
 
 - Create a virtual environment of your choice; eg: 
 ```virtualenv venv```
@@ -19,18 +21,12 @@ Make sure the ```.env``` file is in this directory. Then simply run
 ```source venv/Scripts/activate```
 ```pip install -r requirements.txt```
 - Run ```mim install mmcv-full```
-- Run the Flask app
-```python app.py```
+- Run the API with
+```uvicorn main:app --port 5000```
 
-The app is hosted on ```localhost``` at port ```5000``` and available endpoints are
-- ```/api/v1/cam_metadata```
-- ```/api/v1/cam_images```
-- ``` /api/v1/speed_bands```
-- ```/api/v1/traffic_incidents```
-- ```/api/v1/density```
-- ```/api/v1/batch_inference```
+The app is hosted on ```localhost (127.0.0.1)``` at port ```5000```. API documentation is available at ```127.0.0.1:5000/docs```
 
-Only ```density``` requires you to specify a parameter (```cameraID```, ```prob```) when you make a request.
+![image](./assets/swagger.JPG)
 
 Specific usage examples can be found in the [api_demo notebook](https://github.com/hewliyang/dsa3101-2210-14-lta/blob/main/backend/api_demo.ipynb)
 
@@ -59,7 +55,7 @@ print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
 
 ## File Descriptions
 
-### utils.py
+### **utils.py**
 
 Contains helper functions which help pre-process and generate new features for data retrieved from
 LTA API. Also serves as to export one instance of data locally. Calling
@@ -70,7 +66,7 @@ python utils.py
 
 Will export speed band data and traffic incidents to CSV files, while images are downloaded.
 
-### crop.py
+### **crop.py**
 
 Two distinct uses:
 1) Auto Cropping  
@@ -104,46 +100,19 @@ How To Crop:
 - If both sides cropped correctly --> Copy the coords outputed on ur cmd
 
 
-### find_density.py  
+### **find_density.py**  
 Takes in functions from crop, utils, count to combine and find the latest density from images taken from lta
 Given the density data, perform data preprocessing including removing 0s and outliers. Afterwards, scale and normalise the processed data and plot the values.
 
-
-## Design Decisions
-
-**Omitting the use of speed band data**
-
-Observe the following plot of camera locations vs observed speed band locations plotted using the following code :
-
-```python
-import folium
-# create base map
-m = folium.Map(location=[1.3521, 103.8198], zoom_start = 12)
-# add camera locations to map
-for id, lat, lng in zip(image_data.CameraID, image_data.Latitude, image_data.Longitude):
-     marker = folium.Marker([lat, lng], popup = f"id: {id}")
-     marker.add_to(m)
-# add speedband locations to map
-for road_name, lat1, lng1, lat2, lng2 in zip(speed_band_data.RoadName, speed_band_data.latitude1, speed_band_data.longitude1, speed_band_data.latitude2, speed_band_data.longitude2):
-    points = [(float(lat1),float(lng1)), (float(lat2),float(lng2))]
-    folium.PolyLine(points, popup = str(road_name), weight = 5, opacity = 1, color = "red").add_to(m)
-```
-![](./assets/map_road_plot.JPG)
-
-Speed band data returned by LTA's sensors are typically 
-1. Heavily clustered in the south 
-2. Not relevant to the locations of their traffic cameras which are on **highways** only
-
-The interactive plot is available at this [link](https://hewliyang.github.io/)
 
 ## Models Used
 
 **Vehicle Counting**
 
-We use a pre-trained YOLO V4 model to count the number of vehicles that can be seen from the traffic cameras.
+We use a pre-trained [YOLOX model](https://github.com/Megvii-BaseDetection/YOLOX) in combination with [SAHI (Slicing Aided Hyper Inference)](https://github.com/obss/sahi) to count the number of vehicles that can be seen from the traffic cameras. 
 
-The weights are not included in this repository, but can be retrieved from [AlexeyAB's](https://github.com/AlexeyAB/darknet/wiki/YOLOv4-model-zoo) repository. This file should be included under the ```models``` folder along with its associated ```.cfg``` file. 
+The weights were obtained from [MMDet's Model Zoo](https://github.com/open-mmlab/mmdetection/tree/master/configs/yolox)
 
-An example of a detection can be seen in the following image :
+Sample inference:
+![image](./assets/sample_1709.png)
 
-![](./assets/sample_detection.jpg)

@@ -11,7 +11,11 @@ global detector
 detector = Detector()
 
 description = """
-Available endpoints are as listed below. 
+Available endpoints are as listed below.  
+
+### Notice
+**batch_inference** is unstable as the request takes a while. It may timeout depending on how
+fast the host system is.
 """
 
 app = fastapi.FastAPI(
@@ -19,6 +23,7 @@ app = fastapi.FastAPI(
     description = description,
     version = "0.0.1"
     )
+
 
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="assets")

@@ -12,7 +12,7 @@ url = "http://flask-model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http:
 # Insufficient computing resources version
 # Generate next predictions
 def generate_new_set():
-	folder = r'./assets/imageToBeUpdated'
+	folder = r'./assets/imageToBeUpdated/'
 	# Empty all images in the toBeUpdated folder
 	if os.listdir(folder) != []:
 		for file in os.listdir(folder):

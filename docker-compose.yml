@@ -25,7 +25,6 @@ services:
       - "5001:5001"
     depends_on: 
     - "flask-model"
-    - "redis-cache"
 
 volumes:
   imageCurrShown:

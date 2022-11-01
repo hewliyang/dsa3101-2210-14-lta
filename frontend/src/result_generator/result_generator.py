@@ -7,7 +7,7 @@ import pickle
 from datetime import datetime
 from time import strptime, sleep
 
-url = "http://backend_flask_model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
+url = "http://flask-model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
 
 # Insufficient computing resources version
 # Generate next predictions
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 			if data['ImageLink'][0] != df['imageLink'][0]:
 				new_prediction = generate_new_set()
 				redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
-		else: 
+		else:
 			x+=1
 			new_prediction = generate_new_set()
 			redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 #		if file.endswith(".jpg"):
 #			os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
 #	return result
-			
+
 
 
 

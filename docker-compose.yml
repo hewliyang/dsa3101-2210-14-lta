@@ -1,0 +1,33 @@
+services:
+  flask-model:
+    build: ./backend
+    ports:
+      - "5000:5000"
+
+  dash-app:
+    volumes:
+      - imageCurrShown:/app/src/assets/imageCurrShown
+    build:
+      context: ./frontend
+      dockerfile: dash_dockerfile.txt
+    ports:
+      - "8050:8050"
+  redis-cache:
+    image: redis
+    ports:
+      - "6379:6379"
+  result-gen:  
+    volumes:
+      - imageCurrShown:/app/assets/imageCurrShown
+      - imageToBeUpdated:/app/assets/imageToBeUpdated
+    build: ./frontend/src/result_generator
+    ports:
+      - "5001:5001"
+    depends_on: 
+    - "flask-model"
+    - "redis-cache"
+
+volumes:
+  imageCurrShown:
+  imageToBeUpdated:
+

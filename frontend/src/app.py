@@ -44,11 +44,11 @@ def serve_layout():
 
 app.layout = serve_layout
 
-@app.callback(Output('current-predictions', 'data'), Input('update-predictions', 'n_intervals'), prevent_initial_call = True) 
+@app.callback(Output('current-predictions', 'data'), Input('update-predictions', 'n_intervals'), prevent_initial_call = True)
 def generate_predictions(n):
 	redisConnection = redis.Redis(host='redis-cache', port=6379, db=0)
 	predictions_df = pickle.loads(redisConnection.get("currDisplay"))
 	return predictions_df.to_json(date_format='iso', orient = 'split')
 
 if __name__ == "__main__":
-	app.run_server(debug=True, dev_tools_hot_reload=False, use_reloader=False)
+	app.run_server(debug=True, host="0.0.0.0",dev_tools_hot_reload=False, use_reloader=False)

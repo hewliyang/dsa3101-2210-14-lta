@@ -1,8 +1,15 @@
 services:
   flask-model:
     build: ./backend
+    expose: 
+      - "5000"
     ports:
       - "5000:5000"
+    healthcheck:
+      test: "curl -f http://localhost:5000"
+      interval: 5s
+      timeout: 600s
+      retries: 5
 
   dash-app:
     volumes:
@@ -24,9 +31,9 @@ services:
     ports:
       - "5001:5001"
     depends_on: 
-    - "flask-model"
+      flask-model:
+        condition: service_healthy
 
 volumes:
   imageCurrShown:
   imageToBeUpdated:
-

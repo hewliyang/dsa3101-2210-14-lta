@@ -4,6 +4,7 @@ import requests
 import urllib
 import redis
 import pickle
+import shutil
 from datetime import datetime
 from time import strptime, sleep
 
@@ -45,7 +46,8 @@ def generate_new_set():
 				os.remove(f'{currDisplayFolder}{file}')
 	for file in os.listdir(folder): # Move files from toBeUpdated to Current showing photos
 		if file.endswith(".jpg"):
-			os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
+			shutil.copyfile(f'{folder}{file}', f'{currDisplayFolder}{file}')
+			os.remove(f'{folder}{file}')
 	return result
 
 if __name__ == "__main__":

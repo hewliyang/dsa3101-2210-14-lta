@@ -37,7 +37,7 @@ def serve_layout():
 				fluid=True,
 				style={"height":"90vh", "transition": "margin-right .5s", "width":"auto", "padding":0, "margin":0, 'max-height':"90vh"}
 			),
-			dcc.Interval(id='update-predictions', interval=180000, n_intervals=0), # Every 3mins check
+			dcc.Interval(id='update-predictions', interval=60000, n_intervals=0), # Every min check
 			dcc.Store(id='current-predictions', storage_type='local', clear_data=True)
 		]
 	)
@@ -48,7 +48,9 @@ app.layout = serve_layout
 def generate_predictions(n):
 	redisConnection = redis.Redis(host='redis-cache', port=6379, db=0)
 	predictions_df = pickle.loads(redisConnection.get("currDisplay"))
-	return predictions_df.to_json(date_format='iso', orient = 'split')
+	if isinstance(predictions_df, pd.DataFrame): 
+		return predictions_df.to_json(date_format='iso', orient = 'split')
+	return dash.no_update
 
 if __name__ == "__main__":
-	app.run_server(debug=True, host="0.0.0.0",dev_tools_hot_reload=False, use_reloader=False)
+	app.run_server(debug=True, host="0.0.0.0", use_reloader = False)

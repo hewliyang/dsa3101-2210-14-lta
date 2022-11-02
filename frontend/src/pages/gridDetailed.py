@@ -159,6 +159,7 @@ def update_images(selected_img, json_data):
 	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
 	imgSrcList.sort(key= lambda x:x[2], reverse=True)
 
+	row = 0
 	main_value = 0
 	for i in range(len(imgSrcList)):
 		if imgSrcList[i][0] == selected_img:
@@ -168,8 +169,8 @@ def update_images(selected_img, json_data):
 	# Main
 	imgToDisplay = [create_card(imgSrcList[main_value][0], imgSrcList[main_value][1], seriousness(imgSrcList[main_value][2]), True)]
 	detailed_data = [row['CameraID'].values[0], f'{row["Latitude"].values[0]}, {row["Longitude"].values[0]}',\
-					row['dir1'].values[0], row['density1'].values[0], row['prob1'].values[0],\
-					row['dir2'].values[0], row['density2'].values[0], row['prob2'].values[0]]
+					row['dir1'].values[0], round(row['density1'].values[0], 3), row['prob1'].values[0],\
+					row['dir2'].values[0], round(row['density2'].values[0], 3), row['prob2'].values[0]]
 	
 	# Top 4 aside from main
 	for imgNum in range(len(imgSrcList)):

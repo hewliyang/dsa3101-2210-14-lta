@@ -57,15 +57,17 @@ if __name__ == "__main__":
 		if x!=0: # First set just creates
 			df = pickle.loads(redisConnection.get("currDisplay"))
 			images_url = f'{url}cam_images'
-			data = requests.get(images_url).json()[0]
-			if data['ImageLink'][0] != df['imageLink'][0]:
-				new_prediction = generate_new_set()
-				redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
+			r1 = requests.get(images_url)
+			if r1.status_code == 200:
+				data = r1.json()[0]
+				if data['ImageLink'][0] != df['imageLink'][0]:
+					new_prediction = generate_new_set()
+					redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
 		else:
 			x+=1
 			new_prediction = generate_new_set()
 			redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
-		sleep(3)
+		sleep(60)
 
 # With sufficient computing resources version
 #function to download images, named by the cameraID_datetime.jpy

@@ -9,6 +9,10 @@ COPY ./requirements.txt /app
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 RUN mim install mmcv-full
 
+# Fix timezone issue
+ENV TZ=Asia/Singapore
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # copy all scripts
 COPY . /app
 

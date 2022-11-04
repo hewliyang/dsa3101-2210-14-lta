@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 import os
 import requests
 
+TWELVE_HOURS_IN_SECONDS = 43200
+
 #initialise API keys
 load_dotenv()
 DB_KEY = os.getenv('DB_KEY')
@@ -37,6 +39,7 @@ app = fastapi.FastAPI(
 
 db = deta.Base("density")
 bucket = deta.Drive("latest-images")
+history = deta.Base("history")
 
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="assets")
@@ -78,7 +81,8 @@ async def get_density(cameraID: int):
 
         bucket.put(f"{cameraID}.jpg", data=image_bytes)
         db.put(d_data, key=str(cameraID))
-        
+        history.put({"id":cameraID, "value":d_data}, expire_in=TWELVE_HOURS_IN_SECONDS)
+
         return Response(d_data, media_type="application/json")
     return None
 
@@ -103,9 +107,3 @@ async def get_record(cameraID: int):
         return Response(record["value"], media_type="application/json")
     else:
         return f"Inference has not yet been made for camera ID : {cameraID}. Call density first."
-
-@app.get("/api/v1/debug")
-async def debug(cameraID: int):
-    return Response(retrieve_density_both(cameraID, detector).
-    to_json(orient="records"),
-    media_type="application/json")

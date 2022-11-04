@@ -1,8 +1,6 @@
 services:
   flask-model:
     build: ./backend
-    environment:
-      TZ: "Asia/Singapore"
     expose: 
       - "5000"
     ports:
@@ -15,9 +13,7 @@ services:
 
   dash-app:
     volumes:
-      - imageCurrShown:/app/src/assets/imageCurrShown
-    environment:
-      TZ: "Asia/Singapore"  
+      - assets:/app/src/assets
     build:
       context: ./frontend
       dockerfile: dash_dockerfile.txt
@@ -25,17 +21,12 @@ services:
       - "8050:8050"
   redis-cache:
     image: redis
-    environment:
-      TZ: "Asia/Singapore"
     ports:
       - "6379:6379"
   result-gen:  
     volumes:
-      - imageCurrShown:/app/assets/imageCurrShown
-      - imageToBeUpdated:/app/assets/imageToBeUpdated
+      - assets:/app/assets
     build: ./frontend/src/result_generator
-    environment:
-      TZ: "Asia/Singapore"
     ports:
       - "5001:5001"
     depends_on: 
@@ -43,5 +34,4 @@ services:
         condition: service_healthy
 
 volumes:
-  imageCurrShown:
-  imageToBeUpdated:
+  assets:

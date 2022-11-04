@@ -38,7 +38,7 @@ def generate_new_set():
 			predictions += [[CID, data['ImageLink'], f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
 							direction_label.iloc[i, 2], data['density2'], data['prob2']]]
 	result = pd.DataFrame(predictions, columns=['CameraID', 'imageLink', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
-	#result.to_csv(r"./assets/backup.csv", index=False)
+	result.to_csv(r"./assets/backup.csv", index=False)
 	currDisplayFolder = r'./assets/imageCurrShown/'
 	if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
 		for file in os.listdir(currDisplayFolder):

@@ -1,0 +1,37 @@
+services:
+  flask-model:
+    build: ./backend
+    expose: 
+      - "5000"
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: "curl -f http://localhost:5000"
+      interval: 5s
+      timeout: 600s
+      retries: 5
+
+  dash-app:
+    volumes:
+      - assets:/app/src/assets
+    build:
+      context: ./frontend
+      dockerfile: dash_dockerfile.txt
+    ports:
+      - "8050:8050"
+  redis-cache:
+    image: redis
+    ports:
+      - "6379:6379"
+  result-gen:  
+    volumes:
+      - assets:/app/assets
+    build: ./frontend/src/result_generator
+    ports:
+      - "5001:5001"
+    depends_on: 
+      flask-model:
+        condition: service_healthy
+
+volumes:
+  assets:

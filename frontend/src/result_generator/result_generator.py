@@ -4,15 +4,16 @@ import requests
 import urllib
 import redis
 import pickle
+import shutil
 from datetime import datetime
 from time import strptime, sleep
 
-url = "http://backend_flask_model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
+url = "http://flask-model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
 
 # Insufficient computing resources version
 # Generate next predictions
 def generate_new_set():
-	folder = r'./assets/imageToBeUpdated'
+	folder = r'./assets/imageToBeUpdated/'
 	# Empty all images in the toBeUpdated folder
 	if os.listdir(folder) != []:
 		for file in os.listdir(folder):
@@ -37,7 +38,7 @@ def generate_new_set():
 			predictions += [[CID, data['ImageLink'], f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
 							direction_label.iloc[i, 2], data['density2'], data['prob2']]]
 	result = pd.DataFrame(predictions, columns=['CameraID', 'imageLink', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
-	#result.to_csv(r"./assets/backup.csv", index=False)
+	result.to_csv(r"./assets/backup.csv", index=False)
 	currDisplayFolder = r'./assets/imageCurrShown/'
 	if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
 		for file in os.listdir(currDisplayFolder):
@@ -45,7 +46,8 @@ def generate_new_set():
 				os.remove(f'{currDisplayFolder}{file}')
 	for file in os.listdir(folder): # Move files from toBeUpdated to Current showing photos
 		if file.endswith(".jpg"):
-			os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
+			shutil.copyfile(f'{folder}{file}', f'{currDisplayFolder}{file}')
+			os.remove(f'{folder}{file}')
 	return result
 
 if __name__ == "__main__":
@@ -55,15 +57,17 @@ if __name__ == "__main__":
 		if x!=0: # First set just creates
 			df = pickle.loads(redisConnection.get("currDisplay"))
 			images_url = f'{url}cam_images'
-			data = requests.get(images_url).json()[0]
-			if data['ImageLink'][0] != df['imageLink'][0]:
-				new_prediction = generate_new_set()
-				redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
-		else: 
+			r1 = requests.get(images_url)
+			if r1.status_code == 200:
+				data = r1.json()[0]
+				if data['ImageLink'][0] != df['imageLink'][0]:
+					new_prediction = generate_new_set()
+					redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
+		else:
 			x+=1
 			new_prediction = generate_new_set()
 			redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
-		sleep(3)
+		sleep(60)
 
 # With sufficient computing resources version
 #function to download images, named by the cameraID_datetime.jpy
@@ -110,7 +114,7 @@ if __name__ == "__main__":
 #		if file.endswith(".jpg"):
 #			os.rename(f'{folder}{file}', f'{currDisplayFolder}{file}')
 #	return result
-			
+
 
 
 

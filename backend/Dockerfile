@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y python3 pip libgl1 libglib2.0-0
+RUN apt-get update && apt-get install -y python3 pip libgl1 libglib2.0-0 && apt install -y curl
 
 # install dependencies first
 COPY ./requirements.txt /app

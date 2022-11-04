@@ -16,3 +16,4 @@ sahi == 0.10.7
 openmim
 scikit-learn
 jinja2
+deta

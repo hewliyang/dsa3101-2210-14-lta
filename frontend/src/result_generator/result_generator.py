@@ -5,6 +5,7 @@ import urllib
 import redis
 import pickle
 import shutil
+import pytz
 from datetime import datetime
 from time import strptime, sleep
 
@@ -30,7 +31,7 @@ def generate_new_set():
 		if r1.status_code == 200:
 			data = r1.json()[0]
 			# Download the picture
-			picTime = datetime.utcfromtimestamp(data['timestamp']/1000).strftime('%Y%m%d%H%M%S')
+			picTime = datetime.fromtimestamp(data['timestamp']/1000, pytz.timezone("Asia/Singapore")).strftime('%Y%m%d%H%M%S')
 			urllib.request.urlretrieve(
 					data['ImageLink'],
 					os.path.join(folder, f'{CID}_{picTime}.jpg')

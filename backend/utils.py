@@ -84,7 +84,7 @@ def fetch_all_from_deta(db: deta.Base, id: int):
 
 # convert unix time (int) to string
 def convert_time(ts: int):
-    ts = ts/1000
+    ts = ts/1000 + 28800
     return(datetime.datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
 
 # process data retrieved from DB for easy plotting on client-side

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import os
 import requests
 
-TWELVE_HOURS_IN_SECONDS = 43200
+TWENTY_FOUR_HOURS = 86400
 
 #initialise API keys
 load_dotenv()
@@ -81,7 +81,7 @@ async def get_density(cameraID: int):
 
         bucket.put(f"{cameraID}.jpg", data=image_bytes)
         db.put(d_data, key=str(cameraID))
-        history.put({"id":cameraID, "value":d_data}, expire_in=TWELVE_HOURS_IN_SECONDS)
+        history.put({"id":cameraID, "value":d_data}, expire_in=TWENTY_FOUR_HOURS)
 
         return Response(d_data, media_type="application/json")
     return None
@@ -107,3 +107,9 @@ async def get_record(cameraID: int):
         return Response(record["value"], media_type="application/json")
     else:
         return f"Inference has not yet been made for camera ID : {cameraID}. Call density first."
+
+@app.get("/api/v1/history")
+async def get_history(cameraID: int):
+    data = fetch_all_from_deta(history, cameraID)
+    df = proc_data(data)
+    return Response(df.to_json(orient="records"), media_type="application/json")

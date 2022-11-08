@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 import os
 import urllib
 from find_density import find_density, normaliseDensity, find_density_with_link
+import deta
+from deta import Deta
+import json
 
 load_dotenv()
 
@@ -67,6 +70,29 @@ def download_images(dataframe, folder):
             os.path.join(folder, str(dataframe['CameraID'].values[i])+'.jpg')
         )
     return None
+
+# retrieiving historical data from DB
+def fetch_all_from_deta(db: deta.Base, id: int):
+    res = db.fetch({'id':id})
+    all_items = res.items
+
+    while res.last:
+        res = db.fetch({'id':id}, last=res.last)
+        all_items += res.items
+
+    return all_items
+
+# convert unix time (int) to string
+def convert_time(ts: int):
+    ts = ts/1000 + 28800
+    return(datetime.datetime.utcfromtimestamp(ts).strftime('%Y-%m-%dT%H:%M:%S'))
+
+# process data retrieved from DB for easy plotting on client-side
+def proc_data(data: dict) -> pd.DataFrame:
+    li = [json.loads(d["value"])[0] for d in data]
+    df = pd.DataFrame(li)
+    df["timestamp"] = df.apply(lambda x: convert_time(x["timestamp"]), axis = 1)
+    return df.sort_values(by="timestamp").reset_index(drop=True)
 
 # functions to retrieve data from LTA API
 

@@ -1,7 +1,6 @@
 """
 This file is for the main dash application
 """
-# TODO: UNSURE WHY CONNECTION IS REFUSED WHEN TRYING TO RUN RESULT_GENERATOR
 import pandas as pd
 import dash
 import dash_bootstrap_components as dbc
@@ -53,4 +52,4 @@ def generate_predictions(n):
 	return dash.no_update
 
 if __name__ == "__main__":
-	app.run_server(debug=True, host="0.0.0.0", use_reloader = False)
+	app.run_server(debug=True, host="0.0.0.0", use_reloader = False, dev_tools_hot_reload = False)

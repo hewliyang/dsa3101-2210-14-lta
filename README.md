@@ -27,5 +27,7 @@ Generate a new **Deta** token for free at
 
 Run with **Docker** 🐳
 ```
-docker compose up -d
+docker-compose up --d
 ```
+
+Access the web app at [`localhost:8050`](127.0.0.1:8050), REST API at [`localhost:5000`](127.0.0.1:5000).

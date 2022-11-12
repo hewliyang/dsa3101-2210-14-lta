@@ -14,17 +14,6 @@ dash.register_page(
 	title='Map'
 )
 
-# def get_data():
-
-#     #columns=['CameraID', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2']
-#     #dummy data
-#     data = {1:{"CameraID": 1701, "latitude": 1.290270,"longitude": 103.851959,"ImageLink":"some link","timestamp": 1,"density1": 35, "density2": 60, "prob1": 0.3, "prob2":0.71},
-#             2:{"CameraID": 1702,"latitude": 1.292270,"longitude": 103.852959,"ImageLink":"some link","timestamp": 1,"density1": 45, "density2": 40, "prob1": 0.5, "prob2":0.6},
-#             3:{"CameraID": 1703,"latitude": 1.280270,"longitude": 103.861959,"ImageLink":"some link","timestamp": 1,"density1": 35, "density2": 10, "prob1": 0.3, "prob2":0.1},
-#             4:{"CameraID": 1704,"latitude": 1.280170,"longitude": 103.851659,"ImageLink":"some link","timestamp": 1,"density1": 25, "density2": 45, "prob1": 0.2, "prob2":0.71},
-#             5:{"CameraID": 1705,"latitude": 1.3521,"longitude": 103.8198,"ImageLink":"some link","timestamp": 1,"density1": 55, "density2": 62, "prob1": 0.6, "prob2":0.7}
-#             }
-#     return data
 
 def make_map(df):
     #columns=['CameraID', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2']

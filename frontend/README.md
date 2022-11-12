@@ -1,10 +1,5 @@
 # Frontend Documentation
 
-## HOW TO RUN
-
-To run the docker containers, run the following command from frontend folder:
-
-```docker compose up -d```
 
 Frontend application will be hosted on ```http://127.0.0.1:8050/```
 

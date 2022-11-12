@@ -9,7 +9,7 @@ import pytz
 from datetime import datetime
 from time import strptime, sleep
 
-url = "http://flask-model:5000/api/v1/" #"http://127.0.0.1:5000/api/v1/" #"http://localhost:5000/api/v1/""
+url = "http://flask-model:5000/api/v1/" 
 
 # Insufficient computing resources version
 # Generate next predictions

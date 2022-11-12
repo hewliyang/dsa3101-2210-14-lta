@@ -77,7 +77,6 @@ def render_content(tab):
                         ], width = 6
                     )
                 ])
-            #html.Img(src= '../assets/about_map.png',style={"width":"45%", "display":"inline-block"}),
             ]
         )
     else:

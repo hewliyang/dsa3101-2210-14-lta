@@ -26,7 +26,6 @@ def create_card(img_src, cameraID, severity):
 	image = rf'/assets/imageCurrShown/{img_src}'
 	return dbc.Card(
 		[
-			#html.H4("Placeholder", style={'textAlign': 'center'}),
 			dbc.CardImg(src=image, className = 'align-self-center', style={"max-height":"25vh", "height":"auto"}),
 			dbc.CardImgOverlay(
 				[html.H5(f"CAMERA_ID: {cameraID}", className="card-title", style={"color":"white", "background-color":"gray", "width":"50%", "opacity":0.7}),

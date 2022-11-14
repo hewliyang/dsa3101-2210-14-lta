@@ -11,26 +11,24 @@ from time import strptime, sleep
 
 url = "http://flask-model:5000/api/v1/" 
 
-# Insufficient computing resources version
 # Generate next predictions
 def generate_new_set():
 	folder = r'./assets/imageToBeUpdated/'
 	# Empty all images in the toBeUpdated folder
-	if os.listdir(folder) != []:
+	if os.listdir(folder) != []: # Check if folder is empty 
 		for file in os.listdir(folder):
-			if file.endswith(".jpg"):
+			if file.endswith(".jpg"): # Remove only jpg files
 				os.remove(f'{folder}{file}')
-	direction_label = pd.read_csv(r"./assets/direction_label.csv")
-	# Band_Aid solution
-	density_url = f"{url}density"
+	direction_label = pd.read_csv(r"./assets/direction_label.csv") # Read hard-coded direction labels
+	density_url = f"{url}density" # Request URL for density
 	predictions = []
-	for i in range(len(direction_label['CameraID'])):
+	for i in range(len(direction_label['CameraID'])): # For each camera_ID
 		CID = direction_label.iloc[i, 0]
 		params = {"cameraID":CID, "prob":True} # To obtain Probability and density
 		r1 = requests.get(density_url, params=params)
 		if r1.status_code == 200:
 			data = r1.json()[0]
-			# Download the picture
+			# Download the picture and name by CID_timestamp
 			picTime = datetime.fromtimestamp(data['timestamp']/1000, pytz.timezone("Asia/Singapore")).strftime('%Y%m%d%H%M%S')
 			urllib.request.urlretrieve(
 					data['ImageLink'],
@@ -39,7 +37,7 @@ def generate_new_set():
 			predictions += [[CID, data['ImageLink'], f'{CID}_{picTime}.jpg', data['Latitude'], data['Longitude'], direction_label.iloc[i, 1], data['density1'], data['prob1'],\
 							direction_label.iloc[i, 2], data['density2'], data['prob2']]]
 	result = pd.DataFrame(predictions, columns=['CameraID', 'imageLink', 'imageFile', 'Latitude', 'Longitude', 'dir1', 'density1', 'prob1', 'dir2', 'density2', 'prob2'])
-	result.to_csv(r"./assets/backup.csv", index=False)
+	result.to_csv(r"./assets/backup.csv", index=False) # Saving to backup.csv
 	currDisplayFolder = r'./assets/imageCurrShown/'
 	if os.listdir(currDisplayFolder) != []: # Remove Current showing photos
 		for file in os.listdir(currDisplayFolder):
@@ -52,23 +50,24 @@ def generate_new_set():
 	return result
 
 if __name__ == "__main__":
-	redisConnection = redis.Redis(host='redis-cache', port=6379, db=0)
+	redisConnection = redis.Redis(host='redis-cache', port=6379, db=0) # Connect to REDIS
 	x = 0
-	while True:
+	while True: # Continues until stop
 		if x!=0: # First set just creates
-			df = pickle.loads(redisConnection.get("currDisplay"))
-			images_url = f'{url}cam_images'
+			df = pickle.loads(redisConnection.get("currDisplay")) # Load current images
+			images_url = f'{url}cam_images' # Get New Images Link
 			r1 = requests.get(images_url)
 			if r1.status_code == 200:
 				data = r1.json()[0]
-				if data['ImageLink'][0] != df['imageLink'][0]:
-					new_prediction = generate_new_set()
-					redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
+				if data['ImageLink'][0] != df['imageLink'][0]: # Check if the unique image links are the same
+					# Image link is different
+					new_prediction = generate_new_set() # start predictions request
+					redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5)) # Save to redis
 		else:
 			x+=1
-			new_prediction = generate_new_set()
-			redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5))
-		sleep(60)
+			new_prediction = generate_new_set() # Start prediction request
+			redisConnection.set("currDisplay", pickle.dumps(new_prediction, protocol=5)) # Save to redis
+		sleep(60) # Rest for next cycle
 
 # With sufficient computing resources version
 #function to download images, named by the cameraID_datetime.jpy

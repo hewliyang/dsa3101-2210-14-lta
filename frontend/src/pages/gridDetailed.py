@@ -159,6 +159,7 @@ def update_images(selected_img, json_data):
 	imgSrcList = [[w, x, max(y, z)] for w, x, y, z in zip(df['imageFile'], df['CameraID'], df['prob1'], df['prob2'])]
 	imgSrcList.sort(key= lambda x:x[2], reverse=True)
 
+	# Isolating row of interest
 	main_value = 0
 	for i in range(len(imgSrcList)):
 		if imgSrcList[i][0] == selected_img:

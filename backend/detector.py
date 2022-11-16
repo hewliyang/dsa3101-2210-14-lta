@@ -1,5 +1,5 @@
 from mmdet.apis import init_detector, inference_detector
-from sahi.model import MmdetDetectionModel
+from sahi import AutoDetectionModel
 from sahi.predict import get_sliced_prediction, predict
 from sahi.utils.cv import read_image_as_pil
 
@@ -9,7 +9,8 @@ MODEL_FILE_PATH = 'models/yolox_tiny_8x8_300e_coco_20211124_171234-b4047906.pth'
 class Detector:
 
     def __init__(self):
-        self.model = MmdetDetectionModel(
+        self.model = AutoDetectionModel.from_pretrained(
+            model_type='mmdet'
             model_path = MODEL_FILE_PATH,
             config_path = CONFIG_FILE_PATH,
             confidence_threshold = 0.2,

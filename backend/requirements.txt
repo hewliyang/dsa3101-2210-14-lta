@@ -12,7 +12,7 @@ opencv-python
 torch==1.12.1+cpu
 torchvision==0.13.1+cpu
 mmdet
-sahi == 0.10.7
+sahi == 0.11.4
 openmim
 scikit-learn
 jinja2

@@ -10,7 +10,7 @@ class Detector:
 
     def __init__(self):
         self.model = AutoDetectionModel.from_pretrained(
-            model_type='mmdet'
+            model_type='mmdet',
             model_path = MODEL_FILE_PATH,
             config_path = CONFIG_FILE_PATH,
             confidence_threshold = 0.2,
